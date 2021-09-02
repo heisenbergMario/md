@@ -9,3 +9,4 @@ int main()
 	cout << time(NULL) << endl;
 } 
 //ddd
+//ddd
