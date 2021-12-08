@@ -1,0 +1,68 @@
+while(1){
+		switch(state){
+		case IDLE:
+			Status = XUsbPs_EpBufferSend(&UsbInstance,1,"00FF00",6);
+			if (Status == XST_SUCCESS) {
+				xil_printf("\r\n idle OK");
+			}
+			else {
+				xil_printf("\r\n idle NG");
+			}
+			break;
+		case CMD:
+			usleep(1000);
+			xil_printf("\r\n cmd OK");
+			Status = XUsbPs_EpBufferSend(&UsbInstance,1,"00FE00",6);
+			if (Status == XST_SUCCESS) {
+				xil_printf("\r\n idle OK");
+			}
+			else {
+				xil_printf("\r\n idle NG");
+			}
+			state=IDLE;
+			break;
+		case IMG:
+			usleep(1000);
+			xil_printf("\r\n img OK");
+			Status = XUsbPs_EpBufferSend(&UsbInstance,1,"00FE00",6);
+			if (Status == XST_SUCCESS) {
+				xil_printf("\r\n idle OK");
+			}
+			else {
+				xil_printf("\r\n idle NG");
+			}
+			state=IDLE;
+			break;
+		default:
+			state=IDLE;
+			break;
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+/* Bulk Out Endpoint Config */
+		{sizeof(USB_STD_EP_DESC),	/* bLength */
+		 USB_ENDPOINT_CFG_DESC,		/* bDescriptorType */
+	    // bit 3...0 : the endpoint number
+	    // bit 6...4 : reserved
+		// bit 7     : 0(OUT), 1(IN)
+		 0x10 | USB_BULKOUT_EP,		/* bEndpointAddress */
+		 0x02,				/* bmAttribute  */
+		 be2les(0x200),			/* wMaxPacketSize */
+		 0x00},				/* bInterval */
+
+		/* Bulk In Endpoint Config */
+		{sizeof(USB_STD_EP_DESC),	/* bLength */
+		 USB_ENDPOINT_CFG_DESC,		/* bDescriptorType */
+		 0x90 | USB_BULKIN_EP,		/* bEndpointAddress */
+		 0x02,				/* bmAttribute  */
+		 be2les(0x200),			/* wMaxPacketSize */
+		 0x00}				/* bInterval */
