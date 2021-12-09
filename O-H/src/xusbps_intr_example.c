@@ -467,6 +467,8 @@ static void XUsbPs_Ep0EventHandler(void *CallBackRef, u8 EpNum,
 
 	InstancePtr = (XUsbPs *) CallBackRef;
 
+	xil_printf("\r\n\r\n EventType: %d", EventType);
+
 	switch (EventType) {
 
 	/* Handle the Setup Packets received on Endpoint 0. */
@@ -474,8 +476,7 @@ static void XUsbPs_Ep0EventHandler(void *CallBackRef, u8 EpNum,
 		Status = XUsbPs_EpGetSetupData(InstancePtr, EpNum, &SetupData);
 		if (XST_SUCCESS == Status) {
 			/* Handle the setup packet. */
-			(int) XUsbPs_Ch9HandleSetupPacket(InstancePtr,
-							   &SetupData);
+			(int) XUsbPs_Ch9HandleSetupPacket(InstancePtr,&SetupData);
 		}
 		break;
 
@@ -489,6 +490,10 @@ static void XUsbPs_Ep0EventHandler(void *CallBackRef, u8 EpNum,
 					&BufferPtr, &BufferLen, &Handle);
 		if (XST_SUCCESS == Status) {
 			/* Return the buffer. */
+
+			//Status = XUsbPs_EpBufferSend(InstancePtr,1,"ddd",3);
+			//XUsbPs_HandleBulkReq1(InstancePtr, EpNum,BufferPtr, BufferLen,NumIrqs, NumReceivedFrames);
+
 			XUsbPs_EpBufferRelease(Handle);
 		}
 		break;

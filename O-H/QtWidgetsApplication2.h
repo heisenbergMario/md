@@ -5,6 +5,13 @@
 #include<libusb.h>
 #include"myThread.h"
 
+#define CTRL_STD_IN	        (LIBUSB_REQUEST_TYPE_STANDARD | LIBUSB_ENDPOINT_IN)
+#define CTRL_STD_OUT		(LIBUSB_REQUEST_TYPE_STANDARD | LIBUSB_ENDPOINT_OUT)
+#define CTRL_VENDOR_IN	    (LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_IN)
+#define CTRL_VENDOR_OUT		(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT)
+#define CTRL_RESERVE_IN	    (LIBUSB_REQUEST_TYPE_RESERVED | LIBUSB_ENDPOINT_IN)
+#define CTRL_RESERVE_OUT    (LIBUSB_REQUEST_TYPE_RESERVED | LIBUSB_ENDPOINT_OUT)
+
 #define USB_VID 0x0D7D
 #define USB_PID 0x010D
 #define EP1_IN 0x91
@@ -37,18 +44,44 @@ private:
 
 
 private slots:
-    void btn1();
-    void btn2();
-    void btn3();
-    void btn4();
-    void btn5();
-    void btn6();
-    void btn7();
-    void btn8();
-    void btn9();
-    void btnA();
-    void btnB();
-    void btnC();
+    void btnA1();
+    void btnA2();
+    void btnA3();
+    void btnB1();
+    void btnB2();
+    void btnB3();
+    void btnC1();
+    void btnC2();
+    void btnC3();
+    void btnD1();
+    void btnD2();
+    void btnD3();
+    void btnE1();
+    void btnE2();
+    void btnE3();
+    void btnF1();
+    void btnF2();
+    void btnF3();
+    void btnG1();
+    void btnG2();
+    void btnG3();
+    void btnH1();
+    void btnH2();
+    void btnH3();
+    void btnI1();
+    void btnI2();
+    void btnI3();
+    void btnJ1();
+    void btnJ2();
+    void btnJ3();
+    void btnK1();
+    void btnK2();
+    void btnK3();
+    void btnL1();
+    void btnL2();
+    void btnL3();
+ 
+
     void lot();
 };
 
