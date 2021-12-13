@@ -312,8 +312,9 @@ void QtWidgetsApplication2::btnA2() {
     ui.lw3->addItem("\r\n btnA2 contorl std");
     ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
     int r = 0;
-    int request = ui.le1->text().toInt();
-    ui.lw3->addItem(ui.le1->text());
+    bool ok;
+    int request = ui.le1->text().toInt(&ok,16);
+    ui.lw3->addItem(QString::number(CTRL_STD_OUT <<8| request,16));
     /*
     dev_handle: 这就是之前libopen函数获得的句柄
     bmRequestType: 请求字段的类型
@@ -327,7 +328,7 @@ void QtWidgetsApplication2::btnA2() {
     wLength 字段内容长度，记得+1
     timeout 超时设置，以毫秒为单位
     */
-    r = libusb_control_transfer(dev_handle, CTRL_STD_OUT, STD_REQUEST, (CTRL_STD_OUT<<8)| STD_REQUEST, 0, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), 100);
+    r = libusb_control_transfer(dev_handle, CTRL_STD_OUT, request, (CTRL_STD_OUT<<8)| request, 0, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), 100);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
@@ -371,6 +372,9 @@ void QtWidgetsApplication2::btnC2() {
     ui.lw3->addItem("\r\n btnC2 control vendor");
     ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
     int r = 0;
+    bool ok;
+    int request = ui.le2->text().toInt(&ok, 16);
+    ui.lw3->addItem(QString::number(CTRL_VENDOR_OUT << 8 | request, 16));
     /*
     dev_handle: 这就是之前libopen函数获得的句柄
     bmRequestType: 请求字段的类型
@@ -384,7 +388,7 @@ void QtWidgetsApplication2::btnC2() {
     wLength 字段内容长度，记得+1
     timeout 超时设置，以毫秒为单位
     */
-    r = libusb_control_transfer(dev_handle, CTRL_VENDOR_OUT, VENDOR_REQUEST, 0, 0, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), 100);
+    r = libusb_control_transfer(dev_handle, CTRL_VENDOR_OUT, request, (CTRL_VENDOR_OUT << 8) | request, 0, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), 100);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
@@ -428,6 +432,9 @@ void QtWidgetsApplication2::btnE2() {
     ui.lw3->addItem("\r\n btnE2 control reserve");
     ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
     int r = 0;
+    bool ok;
+    int request = ui.le3->text().toInt(&ok, 16);
+    ui.lw3->addItem(QString::number(CTRL_RESERVE_OUT << 8 | request, 16));
     /*
     dev_handle: 这就是之前libopen函数获得的句柄
     bmRequestType: 请求字段的类型
@@ -441,7 +448,7 @@ void QtWidgetsApplication2::btnE2() {
     wLength 字段内容长度，记得+1
     timeout 超时设置，以毫秒为单位
     */
-    r = libusb_control_transfer(dev_handle, CTRL_RESERVE_OUT, RESERVE_REQUEST, (CTRL_RESERVE_OUT << 8) | RESERVE_REQUEST, 0, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), 100);
+    r = libusb_control_transfer(dev_handle, CTRL_RESERVE_OUT, request, (CTRL_RESERVE_OUT << 8) | request, 0, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), 100);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));

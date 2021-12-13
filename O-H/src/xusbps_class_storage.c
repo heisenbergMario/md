@@ -358,9 +358,9 @@ void XUsbPs_HandleBulkReq1(XUsbPs *InstancePtr, u8 EpNum,
 	if (status == XST_SUCCESS) {
 			xil_printf("\r\n [Send %d byte] numIrqs:%d numRecFrame:%d###%s" ,BufferLen, NumIrqs, NumReceivedFrames, BufferPtr);
 		}
-		else {
-			xil_printf("\r\n *******************************************************\r\n numIrqs:%d numRecFrame:%d send NG:\r\n %s %d byte", NumIrqs, NumReceivedFrames, BufferPtr,BufferLen);
-		}
+	else {
+		xil_printf("\r\n *******************************************************\r\n numIrqs:%d numRecFrame:%d send NG:\r\n %s %d byte", NumIrqs, NumReceivedFrames, BufferPtr,BufferLen);
+	}
 }
 
 void XUsbPs_HandleBulkReq2(XUsbPs *InstancePtr, u8 EpNum,

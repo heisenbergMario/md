@@ -678,7 +678,7 @@ const static u8	Reply[8] = {0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17};
 
 	xil_printf("-----------------------Direction: %02x\r\n",Direction);
 
-
+	xil_printf("-----------------------SetupData->wLength: %02x\r\n",SetupData->wLength);
 	if (!Direction) {
 		/* Control OUT vendor request */
 		if (SetupData->wLength > 0) {
