@@ -1,68 +1,473 @@
-while(1){
-		switch(state){
-		case IDLE:
-			Status = XUsbPs_EpBufferSend(&UsbInstance,1,"00FF00",6);
-			if (Status == XST_SUCCESS) {
-				xil_printf("\r\n idle OK");
-			}
-			else {
-				xil_printf("\r\n idle NG");
-			}
-			break;
-		case CMD:
-			usleep(1000);
-			xil_printf("\r\n cmd OK");
-			Status = XUsbPs_EpBufferSend(&UsbInstance,1,"00FE00",6);
-			if (Status == XST_SUCCESS) {
-				xil_printf("\r\n idle OK");
-			}
-			else {
-				xil_printf("\r\n idle NG");
-			}
-			state=IDLE;
-			break;
-		case IMG:
-			usleep(1000);
-			xil_printf("\r\n img OK");
-			Status = XUsbPs_EpBufferSend(&UsbInstance,1,"00FE00",6);
-			if (Status == XST_SUCCESS) {
-				xil_printf("\r\n idle OK");
-			}
-			else {
-				xil_printf("\r\n idle NG");
-			}
-			state=IDLE;
-			break;
-		default:
-			state=IDLE;
-			break;
-		}
-	}
+zynq login: 
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 00
+ SetupDataPtr->bRequest: A0
+ SetupDataPtr->wValue: C0A5
+ SetupDataPtr->wIndex: A004
+ SetupDataPtr->wLength: C0A5
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 100
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 40
+DevDesc size: 12
+DevDesc DescType: 01
+DevDesc usb2.0: 0200
+DevDesc DevClass: 0002
+DevDesc DevSubClass: 0002
+DevDesc DevProt: 00FF
+DevDesc MaxPacketSize: 0040
+DevDesc VID: 0D7D
+DevDesc PID: 010D
+DevDesc bcd: 0110
 
 
+ mid
 
 
+DevDesc size: 12
+DevDesc DescType: 01
+DevDesc usb2.0: 0200
+DevDesc DevClass: 0002
+DevDesc DevSubClass: 0002
+DevDesc DevProt: 00FF
+DevDesc MaxPacketSize: 0040
+DevDesc VID: 0D7D
 
 
+ EventType: 1
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 100
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 40
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 00
+ SetupDataPtr->bRequest: 05
+ SetupDataPtr->wValue: 07
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 00
 
 
+ EventType: 2
 
 
-/* Bulk Out Endpoint Config */
-		{sizeof(USB_STD_EP_DESC),	/* bLength */
-		 USB_ENDPOINT_CFG_DESC,		/* bDescriptorType */
-	    // bit 3...0 : the endpoint number
-	    // bit 6...4 : reserved
-		// bit 7     : 0(OUT), 1(IN)
-		 0x10 | USB_BULKOUT_EP,		/* bEndpointAddress */
-		 0x02,				/* bmAttribute  */
-		 be2les(0x200),			/* wMaxPacketSize */
-		 0x00},				/* bInterval */
+ EventType: 1
+ SetupDataPtr->bmRequestType: 00
+ SetupDataPtr->bRequest: 05
+ SetupDataPtr->wValue: 07
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 00
+ 
+ after 
 
-		/* Bulk In Endpoint Config */
-		{sizeof(USB_STD_EP_DESC),	/* bLength */
-		 USB_ENDPOINT_CFG_DESC,		/* bDescriptorType */
-		 0x90 | USB_BULKIN_EP,		/* bEndpointAddress */
-		 0x02,				/* bmAttribute  */
-		 be2les(0x200),			/* wMaxPacketSize */
-		 0x00}				/* bInterval */
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 100
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 12
+DevDesc size: 12
+DevDesc DescType: 01
+DevDesc usb2.0: 0200
+DevDesc DevClass: 0002
+DevDesc DevSubClass: 0002
+DevDesc DevProt: 00FF
+DevDesc MaxPacketSize: 0040
+DevDesc VID: 0D7D
+DevDesc PID: 010D
+DevDesc bcd: 0110
+
+
+ mid
+
+
+DevDesc size: 12
+DevDesc DescType: 01
+DevDesc usb2.0: 0200
+DevDesc DevClass: 0002
+DevDesc DevSubClass: 0002
+DevDesc DevProt: 00FF
+DevDesc MaxPacketSize: 0040
+DevDesc VID: 0D7D
+
+
+ EventType: 2
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 100
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 12
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 200
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: FF
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 200
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: FF
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 303
+ SetupDataPtr->wIndex: 409
+ SetupDataPtr->wLength: FF
+
+
+ EventType: 2
+
+
+ EventType: 2
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 303
+ SetupDataPtr->wIndex: 409
+ SetupDataPtr->wLength: FF
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: C0
+ SetupDataPtr->bRequest: 40
+ SetupDataPtr->wValue: 00
+ SetupDataPtr->wIndex: 04
+ SetupDataPtr->wLength: 10
+-----------------------SetupData->bmRequestType: C0
+-----------------------Direction: 80
+-----------------------SetupData->wLength: 10
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: C0
+ SetupDataPtr->bRequest: 40
+ SetupDataPtr->wValue: 00
+ SetupDataPtr->wIndex: 04
+ SetupDataPtr->wLength: 10
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: C0
+ SetupDataPtr->bRequest: 40
+ SetupDataPtr->wValue: 00
+ SetupDataPtr->wIndex: 04
+ SetupDataPtr->wLength: 28
+-----------------------SetupData->bmRequestType: C0
+-----------------------Direction: 80
+-----------------------SetupData->wLength: 28
+
+
+ EventType: 2
+
+
+ EventType: 2
+
+
+ EventType: 1
+
+ SetupDataPtr->bmRequestType: C0
+ SetupDataPtr->bRequest: 40
+ SetupDataPtr->wValue: 00
+ SetupDataPtr->wIndex: 04
+ SetupDataPtr->wLength: 28
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 300
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: FF
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 300
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: FF
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 302
+ SetupDataPtr->wIndex: 409
+ SetupDataPtr->wLength: FF
+
+
+ EventType: 2
+
+
+ EventType: 2
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 302
+ SetupDataPtr->wIndex: 409
+ SetupDataPtr->wLength: FF
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 100
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 12
+DevDesc size: 12
+DevDesc DescType: 01
+DevDesc usb2.0: 0200
+DevDesc DevClass: 0002
+DevDesc DevSubClass: 0002
+DevDesc DevProt: 00FF
+DevDesc MaxPacketSize: 0040
+DevDesc VID: 0D7D
+DevDesc PID: 010D
+DevDesc bcd: 0110
+
+
+ mid
+
+
+DevDesc size: 12
+DevDesc DescType: 01
+DevDesc usb2.0: 0200
+DevDesc DevClass: 0002
+DevDesc DevSubClass: 0002
+
+DevDesc DevProt: 00FF
+DevDesc MaxPacketSize: 0040
+DevDesc VID: 0D7D
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 100
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 12
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 200
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 09
+
+
+ EventType: 2
+
+
+ EventType: 2
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 200
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 09
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 200
+
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 3C
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 200
+ SetupDataPtr->wIndex: 00
+
+ SetupDataPtr->wLength: 3C
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 00
+ SetupDataPtr->wValue: 00
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 02
+
+
+ EventType: 2
+
+
+ EventType: 2
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 00
+ SetupDataPtr->wValue: 00
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 02
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 00
+ SetupDataPtr->bRequest: 09
+ SetupDataPtr->wValue: 01
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 00
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 00
+ SetupDataPtr->bRequest: 09
+ SetupDataPtr->wValue: 01
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 00
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 300
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: FF
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 300
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: FF
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 301
+ SetupDataPtr->wIndex: 409
+ SetupDataPtr->wLength: FF
+
+
+ EventType: 2
+
+
+ EventType: 2
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 301
+ SetupDataPtr->wIndex: 409
+ SetupDataPtr->wLength: FF
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 302
+ SetupDataPtr->wIndex: 409
+ SetupDataPtr->wLength: FF
+
+
+ EventType: 2
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 302
+ SetupDataPtr->wIndex: 409
+ SetupDataPtr->wLength: FF
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 302
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 1FE
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 302
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 1FE
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 303
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 1FE
+
+
+ EventType: 2
+
+
+ EventType: 2
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 303
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 1FE
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 302
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 1FE
+
+
+ EventType: 1
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 302
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 1FE
+ 
+ after 
+
+ SetupDataPtr->bmRequestType: 80
+ SetupDataPtr->bRequest: 06
+ SetupDataPtr->wValue: 301
+ SetupDataPtr->wIndex: 00
+ SetupDataPtr->wLength: 1FE
+
+
+ EventType: 2
+
+
+ EventType: 2
