@@ -345,7 +345,7 @@
        <item>
         <widget class="QLineEdit" name="le1">
          <property name="text">
-          <string>04</string>
+          <string>06</string>
          </property>
         </widget>
        </item>
@@ -397,6 +397,9 @@
          <width>1011</width>
          <height>31</height>
         </rect>
+       </property>
+       <property name="plainText">
+        <string>0302</string>
        </property>
       </widget>
       <widget class="QPlainTextEdit" name="pte2">

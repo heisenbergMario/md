@@ -347,12 +347,19 @@ void QtWidgetsApplication2::btnA2() {
 void QtWidgetsApplication2::btnB2() {
     ui.lw3->addItem("\r\n btnB2 contorl std");
     int r = 0;
+    bool ok;
+    int request = ui.le1->text().toInt(&ok, 16);
     int lenth = 0, actualLenth;
     if (!ui.pte2->toPlainText().isEmpty())
     {
         lenth = ui.pte2->toPlainText().toInt();
     }
-    r = libusb_control_transfer(dev_handle, CTRL_STD_IN, STD_REQUEST, (CTRL_STD_IN << 8) | STD_REQUEST, 0, dataReceive, lenth, 0);
+    int value = 0x00;
+    if (!ui.pte3->toPlainText().isEmpty())
+    {
+        value = ui.pte3->toPlainText().toInt(&ok, 16);
+    }
+    r = libusb_control_transfer(dev_handle, CTRL_STD_IN, request, value, 0, dataReceive, lenth, 100);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
