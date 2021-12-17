@@ -25,6 +25,8 @@
 #define EP3_IN 0x83
 #define EP3_OUT 0x03
 
+#define INTERFACE_NUMBER 0
+
 class QtWidgetsApplication2 : public QMainWindow
 {
     Q_OBJECT

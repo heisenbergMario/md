@@ -297,9 +297,9 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>180</y>
+       <y>190</y>
        <width>1031</width>
-       <height>581</height>
+       <height>571</height>
       </rect>
      </property>
      <property name="title">
@@ -323,111 +323,359 @@
        <x>0</x>
        <y>-10</y>
        <width>1031</width>
-       <height>201</height>
+       <height>211</height>
       </rect>
      </property>
      <property name="title">
       <string/>
      </property>
-     <widget class="QGroupBox" name="groupBox_5">
+     <widget class="QPlainTextEdit" name="pte1">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>1031</width>
-        <height>61</height>
+        <x>450</x>
+        <y>10</y>
+        <width>571</width>
+        <height>31</height>
        </rect>
       </property>
-      <property name="title">
-       <string/>
+      <property name="plainText">
+       <string>123456789ABCDEF</string>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLineEdit" name="le1">
-         <property name="text">
-          <string>06</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="le2">
-         <property name="text">
-          <string>04</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="le3">
-         <property name="text">
-          <string>04</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="le4"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="le5"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="le6"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="le7"/>
-       </item>
-      </layout>
      </widget>
-     <widget class="QGroupBox" name="groupBox_6">
+     <widget class="QPlainTextEdit" name="pte2">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>450</x>
         <y>50</y>
-        <width>1031</width>
-        <height>141</height>
+        <width>571</width>
+        <height>31</height>
        </rect>
       </property>
-      <property name="title">
+      <property name="plainText">
+       <string>2</string>
+      </property>
+     </widget>
+     <widget class="QPlainTextEdit" name="pte3">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>90</y>
+        <width>571</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="plainText">
        <string/>
       </property>
-      <widget class="QPlainTextEdit" name="pte3">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>90</y>
-         <width>1011</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="plainText">
-        <string>0302</string>
-       </property>
-      </widget>
-      <widget class="QPlainTextEdit" name="pte2">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>50</y>
-         <width>1011</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="plainText">
-        <string>2</string>
-       </property>
-      </widget>
-      <widget class="QPlainTextEdit" name="pte1">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>1011</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="plainText">
-        <string>123456</string>
-       </property>
-      </widget>
+     </widget>
+     <widget class="QPlainTextEdit" name="pte4">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>130</y>
+        <width>571</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="plainText">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPlainTextEdit" name="pte5">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>170</y>
+        <width>571</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="plainText">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leE1">
+      <property name="geometry">
+       <rect>
+        <x>362</x>
+        <y>10</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leD1">
+      <property name="geometry">
+       <rect>
+        <x>274</x>
+        <y>10</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leC1">
+      <property name="geometry">
+       <rect>
+        <x>186</x>
+        <y>10</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>04</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leB1">
+      <property name="geometry">
+       <rect>
+        <x>98</x>
+        <y>10</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>04</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leA1">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>06</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leE2">
+      <property name="geometry">
+       <rect>
+        <x>362</x>
+        <y>50</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leC2">
+      <property name="geometry">
+       <rect>
+        <x>186</x>
+        <y>50</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0000</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leA2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0302</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leB2">
+      <property name="geometry">
+       <rect>
+        <x>98</x>
+        <y>50</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0000</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leD2">
+      <property name="geometry">
+       <rect>
+        <x>274</x>
+        <y>50</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leE3">
+      <property name="geometry">
+       <rect>
+        <x>362</x>
+        <y>90</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leE4">
+      <property name="geometry">
+       <rect>
+        <x>362</x>
+        <y>130</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leC3">
+      <property name="geometry">
+       <rect>
+        <x>186</x>
+        <y>90</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>00</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leA4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>130</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leA3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>90</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>00</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leB3">
+      <property name="geometry">
+       <rect>
+        <x>98</x>
+        <y>90</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>00</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leC4">
+      <property name="geometry">
+       <rect>
+        <x>186</x>
+        <y>130</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leD4">
+      <property name="geometry">
+       <rect>
+        <x>274</x>
+        <y>130</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leD3">
+      <property name="geometry">
+       <rect>
+        <x>274</x>
+        <y>90</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leB4">
+      <property name="geometry">
+       <rect>
+        <x>98</x>
+        <y>130</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leA5">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>170</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leD5">
+      <property name="geometry">
+       <rect>
+        <x>274</x>
+        <y>170</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leE5">
+      <property name="geometry">
+       <rect>
+        <x>362</x>
+        <y>170</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leC5">
+      <property name="geometry">
+       <rect>
+        <x>186</x>
+        <y>170</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leB5">
+      <property name="geometry">
+       <rect>
+        <x>98</x>
+        <y>170</y>
+        <width>79</width>
+        <height>31</height>
+       </rect>
+      </property>
      </widget>
     </widget>
    </widget>

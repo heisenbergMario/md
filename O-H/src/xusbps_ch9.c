@@ -248,14 +248,17 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 			 * of the reply buffer even though we are only using the first
 			 * two bytes.
 			 */
+			xil_printf("\r\n\r\n [request=00 requestType&mask=00 XUSBPS_STATUS_DEVICE]\r\n");
 			*((u16 *) &Reply[0]) = 0x0100; /* Self powered */
 			break;
 
 		case XUSBPS_STATUS_INTERFACE:
+			xil_printf("\r\n\r\n [request=00 requestType&mask=01 XUSBPS_STATUS_INTERFACE]\r\n");
 			*((u16 *) &Reply[0]) = 0x0;
 			break;
 
 		case XUSBPS_STATUS_ENDPOINT:
+			xil_printf("\r\n\r\n [request=00 requestType&mask=02 XUSBPS_STATUS_ENDPOINT]\r\n");
 			{
 			u32 Status;
 			int EpNum = SetupData->wIndex;
@@ -305,6 +308,7 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 		break;
 
 	case XUSBPS_REQ_GET_INTERFACE:
+		xil_printf("\r\n\r\n [XUSBPS_REQ_GET_INTERFACE] Get interface %d/%d/%d\n",SetupData->wIndex, SetupData->wLength,InstancePtr->CurrentAltSetting);
 #ifdef CH9_DEBUG
 		printf("Get interface %d/%d/%d\n",
 			SetupData->wIndex, SetupData->wLength,
@@ -318,6 +322,7 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 		break;
 
 	case XUSBPS_REQ_GET_DESCRIPTOR:
+		xil_printf("\r\n\r\n [XUSBPS_REQ_GET_DESCRIPTOR] Get desc %x/%d \r\n", (SetupData->wValue >> 8) & 0xff,SetupData->wLength);
 #ifdef CH9_DEBUG
 		printf("Get desc %x/%d\n", (SetupData->wValue >> 8) & 0xff,
 				SetupData->wLength);

@@ -22,18 +22,18 @@ QtWidgetsApplication2::QtWidgetsApplication2(QWidget *parent)
     ui.btnK1->setEnabled(false);
     ui.btnL1->setEnabled(false);
     ui.btnA2->setEnabled(false);
+    ui.btnA3->setEnabled(false);
     ui.btnB2->setEnabled(false);
+    ui.btnB3->setEnabled(false);
     ui.btnC2->setEnabled(false);
-    ui.btnD2->setEnabled(false);
-    ui.btnE2->setEnabled(false);
-    ui.btnF2->setEnabled(false);
+    ui.btnC3->setEnabled(false);
 }
 
 void QtWidgetsApplication2::lot() {
     //ui.lw3->scrollToBottom();
     //btnC1();
     int r = 0;
-    r = libusb_bulk_transfer(dev_handle, EP1_IN, dataReceive, 1, &actualLenth, 0);
+    r = libusb_bulk_transfer(dev_handle, EP1_IN, dataReceive, 1, &actualLenth, 100);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
@@ -82,21 +82,21 @@ void QtWidgetsApplication2::openUSB() {
                 ui.lw3->addItem("[ERR]" + QString::fromUtf8(libusb_error_name(r)));
                 return;
             }           
-            r = libusb_kernel_driver_active(dev_handle, 0);
+            r = libusb_kernel_driver_active(dev_handle, INTERFACE_NUMBER);
             ui.lw3->addItem("[libusb_kernel_driver_active]" + QString::number(r));
             if (r < 0) {
                 ui.lw3->addItem("[ERR]" + QString::fromUtf8(libusb_error_name(r)));
                 //return;
             }
             if (r == 1) {
-                r = libusb_detach_kernel_driver(dev_handle, 0);
+                r = libusb_detach_kernel_driver(dev_handle, INTERFACE_NUMBER);
                 ui.lw3->addItem("[libusb_detach_kernel_driver]" + QString::number(r));
                 if (r < 0) {
                     ui.lw3->addItem("[ERR]" + QString::fromUtf8(libusb_error_name(r)));
                     return;
                 }
             }
-            r = libusb_claim_interface(dev_handle, 0);
+            r = libusb_claim_interface(dev_handle, INTERFACE_NUMBER);
             ui.lw3->addItem("[libusb_claim_interface]" + QString::number(r));
             if (r < 0) {
                 ui.lw3->addItem("[ERR]" + QString::fromUtf8(libusb_error_name(r)));
@@ -111,15 +111,13 @@ void QtWidgetsApplication2::openUSB() {
                 ui.btnF1->setEnabled(true);
                 ui.btnG1->setEnabled(true);
                 ui.btnK1->setEnabled(true);
-                ui.btnL1->setEnabled(true);
-                ui.btnA2->setEnabled(true);
-                ui.btnB2->setEnabled(true);
-                ui.btnC2->setEnabled(true);
-                ui.btnD2->setEnabled(true);
-                ui.btnE2->setEnabled(true);
-                ui.btnF2->setEnabled(true);
-                ui.btnK1->setEnabled(true);
                 ui.btnL1->setEnabled(false);
+                ui.btnA2->setEnabled(true);
+                ui.btnA3->setEnabled(true);
+                ui.btnB2->setEnabled(true);
+                ui.btnB3->setEnabled(true);
+                ui.btnC2->setEnabled(true);
+                ui.btnC3->setEnabled(true);
                 ui.lw3->addItem("[USB] opened");                
             }
             break;
@@ -157,7 +155,7 @@ void QtWidgetsApplication2::writeData() {
 }
 
 void QtWidgetsApplication2::btnB1() {
-    ui.lw3->addItem("\r\n btnB1");    
+    ui.lw3->addItem("\r\n btnB1: ep1 write");    
     writeData();
     ui.lw3->scrollToBottom();
 }
@@ -184,7 +182,7 @@ void QtWidgetsApplication2::readData() {
 }
 
 void QtWidgetsApplication2::btnC1() {
-    ui.lw3->addItem("\r\n btnC1");    
+    ui.lw3->addItem("\r\n btnC1: ep1 read");    
     readData();
     ui.lw3->scrollToBottom();
 }
@@ -309,12 +307,25 @@ void QtWidgetsApplication2::btnL1() {
 }
 
 void QtWidgetsApplication2::btnA2() {
-    ui.lw3->addItem("\r\n btnA2 contorl std");
+    ui.lw3->addItem("\r\n btnA2 contorl STD");
     ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
     int r = 0;
     bool ok;
-    int request = ui.le1->text().toInt(&ok,16);
-    ui.lw3->addItem(QString::number(CTRL_STD_OUT <<8| request,16));
+    int request = 0x00;
+    if (!ui.leA1->text().isEmpty())
+    {
+        request = ui.leA1->text().toInt(&ok, 16);
+    }
+    int value = 0x0000;
+    if (!ui.leA2->text().isEmpty())
+    {
+        value = ui.leA2->text().toInt(&ok, 16);
+    }
+    int index = 0x00;
+    if (!ui.leA3->text().isEmpty())
+    {
+        index = ui.leA3->text().toInt(&ok, 16);
+    }       
     /*
     dev_handle: 这就是之前libopen函数获得的句柄
     bmRequestType: 请求字段的类型
@@ -322,13 +333,13 @@ void QtWidgetsApplication2::btnA2() {
                    D6:0=标准,1=类,2=厂商,3=保留
                    D4~D0:0=设备,1=接口,2=端点,3=其他,4...31=保留
     bRequest: 命令
-    wValue: RequestType+Request
+    wValue: reportType+reportID
     wIndex: 简单点可以理解为字段内容的位置，假设你选择准备发送string类型的话，可以会有多个string，分开发送，那肯定就会出现index从0开始到N结束。
     data 字段内容
     wLength 字段内容长度，记得+1
     timeout 超时设置，以毫秒为单位
     */
-    r = libusb_control_transfer(dev_handle, CTRL_STD_OUT, request, (CTRL_STD_OUT<<8)| request, 0, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), 100);
+    r = libusb_control_transfer(dev_handle, CTRL_STD_OUT, request, value, index, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), 100);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
@@ -345,43 +356,26 @@ void QtWidgetsApplication2::btnA2() {
 }
 
 void QtWidgetsApplication2::btnB2() {
-    ui.lw3->addItem("\r\n btnB2 contorl std");
-    int r = 0;
-    bool ok;
-    int request = ui.le1->text().toInt(&ok, 16);
-    int lenth = 0, actualLenth;
-    if (!ui.pte2->toPlainText().isEmpty())
-    {
-        lenth = ui.pte2->toPlainText().toInt();
-    }
-    int value = 0x00;
-    if (!ui.pte3->toPlainText().isEmpty())
-    {
-        value = ui.pte3->toPlainText().toInt(&ok, 16);
-    }
-    r = libusb_control_transfer(dev_handle, CTRL_STD_IN, request, value, 0, dataReceive, lenth, 100);
-    if (r < 0)
-    {
-        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
-        ui.lw3->scrollToBottom();
-        return;
-    }
-    else
-    {
-        //ui.lw3->addItem("[read]" + QString::number(actualLenth) + "byte");
-        ui.lw3->addItem("[read]" + QString(QLatin1String((char*)dataReceive)));
-        ui.lw3->scrollToBottom();
-    }
-    ui.lw3->scrollToBottom();
-}
-
-void QtWidgetsApplication2::btnC2() {
-    ui.lw3->addItem("\r\n btnC2 control vendor");
+    ui.lw3->addItem("\r\n btnB2 control VENDOR");
     ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
     int r = 0;
     bool ok;
-    int request = ui.le2->text().toInt(&ok, 16);
-    ui.lw3->addItem(QString::number(CTRL_VENDOR_OUT << 8 | request, 16));
+    int request = 0x00;
+    if (!ui.leB1->text().isEmpty())
+    {
+        request = ui.leB1->text().toInt(&ok, 16);
+    }
+    int value = 0x0000;
+    if (!ui.leB2->text().isEmpty())
+    {
+        value = ui.leB2->text().toInt(&ok, 16);
+    }
+    int index = 0x00;
+    if (!ui.leB3->text().isEmpty())
+    {
+        index = ui.leB3->text().toInt(&ok, 16);
+    }
+
     /*
     dev_handle: 这就是之前libopen函数获得的句柄
     bmRequestType: 请求字段的类型
@@ -395,7 +389,7 @@ void QtWidgetsApplication2::btnC2() {
     wLength 字段内容长度，记得+1
     timeout 超时设置，以毫秒为单位
     */
-    r = libusb_control_transfer(dev_handle, CTRL_VENDOR_OUT, request, (CTRL_VENDOR_OUT << 8) | request, 0, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), 100);
+    r = libusb_control_transfer(dev_handle, CTRL_VENDOR_OUT, request, value, index, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), 100);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
@@ -411,37 +405,26 @@ void QtWidgetsApplication2::btnC2() {
     ui.lw3->scrollToBottom();
 }
 
-void QtWidgetsApplication2::btnD2() {
-    ui.lw3->addItem("\r\n btnD2 control vendor");
-    int r = 0;
-    int lenth = 0, actualLenth;
-    if (!ui.pte2->toPlainText().isEmpty())
-    {
-        lenth = ui.pte2->toPlainText().toInt();
-    }
-    r = libusb_control_transfer(dev_handle, CTRL_VENDOR_IN, VENDOR_REQUEST, (CTRL_VENDOR_IN << 8) | VENDOR_REQUEST, 0, dataReceive, lenth, 0);
-    if (r < 0)
-    {
-        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
-        ui.lw3->scrollToBottom();
-        return;
-    }
-    else
-    {
-        //ui.lw3->addItem("[read]" + QString::number(actualLenth) + "byte");
-        ui.lw3->addItem("[read]" + QString(QLatin1String((char*)dataReceive)));
-        ui.lw3->scrollToBottom();
-    }
-    ui.lw3->scrollToBottom();
-}
-
-void QtWidgetsApplication2::btnE2() {
-    ui.lw3->addItem("\r\n btnE2 control reserve");
+void QtWidgetsApplication2::btnC2() {
+    ui.lw3->addItem("\r\n btnC2 control RESERVE");
     ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
     int r = 0;
     bool ok;
-    int request = ui.le3->text().toInt(&ok, 16);
-    ui.lw3->addItem(QString::number(CTRL_RESERVE_OUT << 8 | request, 16));
+    int request = 0x00;
+    if (!ui.leC1->text().isEmpty())
+    {
+        request = ui.leC1->text().toInt(&ok, 16);
+    }
+    int value = 0x0000;
+    if (!ui.leC2->text().isEmpty())
+    {
+        value = ui.leC2->text().toInt(&ok, 16);
+    }
+    int index = 0x00;
+    if (!ui.leC3->text().isEmpty())
+    {
+        index = ui.leC3->text().toInt(&ok, 16);
+    }
     /*
     dev_handle: 这就是之前libopen函数获得的句柄
     bmRequestType: 请求字段的类型
@@ -471,27 +454,21 @@ void QtWidgetsApplication2::btnE2() {
     ui.lw3->scrollToBottom();
 }
 
+void QtWidgetsApplication2::btnD2() {
+    ui.lw3->addItem("\r\n btnD2");
+    
+    ui.lw3->scrollToBottom();
+}
+
+void QtWidgetsApplication2::btnE2() {
+    ui.lw3->addItem("\r\n btnE2");
+    
+    ui.lw3->scrollToBottom();
+}
+
 void QtWidgetsApplication2::btnF2() {
-    ui.lw3->addItem("\r\n btnF2 control reserve");
-    int r = 0;
-    int lenth = 0, actualLenth;
-    if (!ui.pte2->toPlainText().isEmpty())
-    {
-        lenth = ui.pte2->toPlainText().toInt();
-    }
-    r = libusb_control_transfer(dev_handle, CTRL_RESERVE_IN, RESERVE_REQUEST, (CTRL_RESERVE_IN << 8) | RESERVE_REQUEST, 0, dataReceive, lenth, 0);
-    if (r < 0)
-    {
-        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
-        ui.lw3->scrollToBottom();
-        return;
-    }
-    else
-    {
-        //ui.lw3->addItem("[read]" + QString::number(actualLenth) + "byte");
-        ui.lw3->addItem("[read]" + QString(QLatin1String((char*)dataReceive)));
-        ui.lw3->scrollToBottom();
-    }
+    ui.lw3->addItem("\r\n btnF2");
+    
     ui.lw3->scrollToBottom();
 }
 
@@ -526,17 +503,122 @@ void QtWidgetsApplication2::btnL2() {
 }
 
 void QtWidgetsApplication2::btnA3() {
-    ui.lw3->addItem("\r\n btnA3");
+    ui.lw3->addItem("\r\n btnA3 contorl STD");
+    int r = 0;
+    bool ok;
+    int request = 0x00;
+    if (!ui.leA1->text().isEmpty())
+    {
+        request = ui.leA1->text().toInt(&ok, 16);
+    }
+    int value = 0x0000;
+    if (!ui.leA2->text().isEmpty())
+    {
+        value = ui.leA2->text().toInt(&ok, 16);
+    }
+    int index = 0x00;
+    if (!ui.leA3->text().isEmpty())
+    {
+        index = ui.leA3->text().toInt(&ok, 16);
+    }
+    int lenth = 0, actualLenth;
+    if (!ui.pte2->toPlainText().isEmpty())
+    {
+        lenth = ui.pte2->toPlainText().toInt();
+    }
+    r = libusb_control_transfer(dev_handle, CTRL_STD_IN, request, value, index, dataReceive, lenth, 100);
+    if (r < 0)
+    {
+        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+        ui.lw3->scrollToBottom();
+        return;
+    }
+    else
+    {
+        //ui.lw3->addItem("[read]" + QString::number(actualLenth) + "byte");
+        ui.lw3->addItem("[read]" + QString(QLatin1String((char*)dataReceive)));
+        ui.lw3->scrollToBottom();
+    }
     ui.lw3->scrollToBottom();
 }
 
 void QtWidgetsApplication2::btnB3() {
-    ui.lw3->addItem("\r\n btnB3");
+    ui.lw3->addItem("\r\n btnB3 control VENDOR");
+    int r = 0;
+    bool ok;
+    int request = 0x00;
+    if (!ui.leB1->text().isEmpty())
+    {
+        request = ui.leB1->text().toInt(&ok, 16);
+    }
+    int value = 0x0000;
+    if (!ui.leB2->text().isEmpty())
+    {
+        value = ui.leB2->text().toInt(&ok, 16);
+    }
+    int index = 0x00;
+    if (!ui.leB3->text().isEmpty())
+    {
+        index = ui.leB3->text().toInt(&ok, 16);
+    }
+    int lenth = 0, actualLenth;
+    if (!ui.pte2->toPlainText().isEmpty())
+    {
+        lenth = ui.pte2->toPlainText().toInt();
+    }
+    r = libusb_control_transfer(dev_handle, CTRL_VENDOR_IN, request, value, index, dataReceive, lenth, 0);
+    if (r < 0)
+    {
+        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+        ui.lw3->scrollToBottom();
+        return;
+    }
+    else
+    {
+        //ui.lw3->addItem("[read]" + QString::number(actualLenth) + "byte");
+        ui.lw3->addItem("[read]" + QString(QLatin1String((char*)dataReceive)));
+        ui.lw3->scrollToBottom();
+    }
     ui.lw3->scrollToBottom();
 }
 
 void QtWidgetsApplication2::btnC3() {
-    ui.lw3->addItem("\r\n btnC3");
+    ui.lw3->addItem("\r\n btnC3 control RESERVE");
+    int r = 0;
+    bool ok;
+    int request = 0x00;
+    if (!ui.leC1->text().isEmpty())
+    {
+        request = ui.leC1->text().toInt(&ok, 16);
+    }
+    int value = 0x0000;
+    if (!ui.leC2->text().isEmpty())
+    {
+        value = ui.leC2->text().toInt(&ok, 16);
+    }
+    int index = 0x00;
+    if (!ui.leC3->text().isEmpty())
+    {
+        index = ui.leC3->text().toInt(&ok, 16);
+    }
+    int lenth = 0, actualLenth;
+    if (!ui.pte2->toPlainText().isEmpty())
+    {
+        lenth = ui.pte2->toPlainText().toInt();
+    }
+    r = libusb_control_transfer(dev_handle, CTRL_RESERVE_IN, request, value, index, dataReceive, lenth, 0);
+    if (r < 0)
+    {
+        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+        ui.lw3->scrollToBottom();
+        return;
+    }
+    else
+    {
+        //ui.lw3->addItem("[read]" + QString::number(actualLenth) + "byte");
+        ui.lw3->addItem("[read]" + QString(QLatin1String((char*)dataReceive)));
+        ui.lw3->scrollToBottom();
+    }
     ui.lw3->scrollToBottom();
 }
 
