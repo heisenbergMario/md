@@ -76,6 +76,7 @@ void QtWidgetsApplication2::openUSB() {
         }
         ui.lw3->addItem("[USB]VID-" + QString("%1").arg(int(desc.idVendor), 4, 16, QLatin1Char('0')).toUpper() + "  PID-" + QString("%1").arg(int(desc.idProduct), 4, 16, QLatin1Char('0')).toUpper());
         if (desc.idVendor == USB_VID && desc.idProduct == USB_PID) {
+            libusb_close(dev_handle);
             r = libusb_open(dev, &dev_handle);
             ui.lw3->addItem("[libusb_open]" + QString::number(r));
             if (r < 0) {
@@ -282,7 +283,25 @@ void QtWidgetsApplication2::btnI1() {
 }
 
 void QtWidgetsApplication2::btnJ1() {
-    ui.lw3->addItem("\r\n btnJ1");
+    ui.lw3->addItem("\r\n btnJ1 reset");
+    int r = 0;
+    if (openFlag)
+    {
+        r = libusb_reset_device(dev_handle);
+        if (r < 0)
+        {
+            ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+            ui.lw3->scrollToBottom();
+            return;
+        }
+        else
+        {
+            ui.lw3->addItem("[reset]");
+            //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
+            ui.lw3->scrollToBottom();
+        }
+    }
+    
     ui.lw3->scrollToBottom();
 }
 

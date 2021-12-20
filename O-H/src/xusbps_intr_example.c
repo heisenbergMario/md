@@ -115,7 +115,7 @@ static XUsbPs UsbInstance;	/* The instance of the USB Controller */
 static volatile int NumIrqs = 0;
 static volatile int NumReceivedFrames = 0;
 int state=IDLE;
-
+int bulkEpDataLenth=0;
 
 /*****************************************************************************/
 /**
@@ -478,7 +478,7 @@ static void XUsbPs_Ep0EventHandler(void *CallBackRef, u8 EpNum,
 			/* Handle the setup packet. */
 			(int) XUsbPs_Ch9HandleSetupPacket(InstancePtr,&SetupData);
 		}
-		break;
+		//break;
 
 	/* We get data RX events for 0 length packets on endpoint 0. We receive
 	 * and immediately release them again here, but there's no action to be
@@ -490,6 +490,15 @@ static void XUsbPs_Ep0EventHandler(void *CallBackRef, u8 EpNum,
 					&BufferPtr, &BufferLen, &Handle);
 		if (XST_SUCCESS == Status) {
 			/* Return the buffer. */
+			if(BufferLen>0)
+			{
+				bulkEpDataLenth=0;
+				for(int i=0;i<BufferLen;i++)
+				{
+					bulkEpDataLenth = bulkEpDataLenth*10+BufferPtr[i]-'0';
+				}
+				xil_printf("\r\n\r\n bulkEpDataLenth: %d\r\n", bulkEpDataLenth);
+			}
 
 			//Status = XUsbPs_EpBufferSend(InstancePtr,1,"ddd",3);
 			//XUsbPs_HandleBulkReq1(InstancePtr, EpNum,BufferPtr, BufferLen,NumIrqs, NumReceivedFrames);
