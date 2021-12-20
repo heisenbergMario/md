@@ -478,7 +478,7 @@ static void XUsbPs_Ep0EventHandler(void *CallBackRef, u8 EpNum,
 			/* Handle the setup packet. */
 			(int) XUsbPs_Ch9HandleSetupPacket(InstancePtr,&SetupData);
 		}
-		//break;
+		break;
 
 	/* We get data RX events for 0 length packets on endpoint 0. We receive
 	 * and immediately release them again here, but there's no action to be
@@ -488,6 +488,7 @@ static void XUsbPs_Ep0EventHandler(void *CallBackRef, u8 EpNum,
 		/* Get the data buffer. */
 		Status = XUsbPs_EpBufferReceive(InstancePtr, EpNum,
 					&BufferPtr, &BufferLen, &Handle);
+		xil_printf(" BufferLen: %d\r\n", BufferLen);
 		if (XST_SUCCESS == Status) {
 			/* Return the buffer. */
 			if(BufferLen>0)
@@ -497,7 +498,7 @@ static void XUsbPs_Ep0EventHandler(void *CallBackRef, u8 EpNum,
 				{
 					bulkEpDataLenth = bulkEpDataLenth*10+BufferPtr[i]-'0';
 				}
-				xil_printf("\r\n\r\n bulkEpDataLenth: %d\r\n", bulkEpDataLenth);
+				xil_printf(" bulkEpDataLenth: %d\r\n", bulkEpDataLenth);
 			}
 
 			//Status = XUsbPs_EpBufferSend(InstancePtr,1,"ddd",3);

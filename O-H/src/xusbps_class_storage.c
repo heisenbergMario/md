@@ -409,8 +409,21 @@ void XUsbPs_HandleBulkReq3(XUsbPs *InstancePtr, u8 EpNum,
 void XUsbPs_ClassReq(XUsbPs *InstancePtr, XUsbPs_SetupData *SetupData)
 {
 
+	int Direction;
+
 	Xil_AssertVoid(InstancePtr != NULL);
 	Xil_AssertVoid(SetupData   != NULL);
+
+	xil_printf("-----------------------[Class]\r\n");
+	xil_printf("-----------------------SetupData->bmRequestType: %02x\r\n",SetupData->bmRequestType);
+	xil_printf("-----------------------SetupData->bRequest: %02x\r\n",SetupData->bRequest);
+	xil_printf("-----------------------SetupData->wValue: %02x\r\n",SetupData->wValue);
+
+	Direction = SetupData->bmRequestType & (1 << 7);
+
+	xil_printf("-----------------------Direction: %02x\r\n",Direction);
+
+	xil_printf("-----------------------SetupData->wLength: %02x\r\n",SetupData->wLength);
 
 
 	switch (SetupData->bRequest) {

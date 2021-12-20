@@ -213,6 +213,7 @@ static void XUsbPs_StdDevReq(XUsbPs *InstancePtr,
 {
 	int Status;
 	int Error = 0;
+	int Direction;
 
 	XUsbPs_Local	*UsbLocalPtr;
 
@@ -232,6 +233,18 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 		return;
 	}
 
+	xil_printf("-----------------------[STD]\r\n");
+	xil_printf("-----------------------SetupData->bmRequestType: %02x\r\n",SetupData->bmRequestType);
+	xil_printf("-----------------------SetupData->bRequest: %02x\r\n",SetupData->bRequest);
+	xil_printf("-----------------------SetupData->wValue: %02x\r\n",SetupData->wValue);
+
+
+	Direction = SetupData->bmRequestType & (1 << 7);
+
+	xil_printf("-----------------------Direction: %02x\r\n",Direction);
+
+	xil_printf("-----------------------SetupData->wLength: %02x\r\n",SetupData->wLength);
+
 	UsbLocalPtr = (XUsbPs_Local *) InstancePtr->UserDataPtr;
 
 #ifdef CH9_DEBUG
@@ -248,17 +261,17 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 			 * of the reply buffer even though we are only using the first
 			 * two bytes.
 			 */
-			xil_printf("\r\n\r\n [request=00 requestType&mask=00 XUSBPS_STATUS_DEVICE]\r\n");
+			xil_printf(" [request=00 requestType&mask=00 XUSBPS_STATUS_DEVICE]\r\n");
 			*((u16 *) &Reply[0]) = 0x0100; /* Self powered */
 			break;
 
 		case XUSBPS_STATUS_INTERFACE:
-			xil_printf("\r\n\r\n [request=00 requestType&mask=01 XUSBPS_STATUS_INTERFACE]\r\n");
+			xil_printf(" [request=00 requestType&mask=01 XUSBPS_STATUS_INTERFACE]\r\n");
 			*((u16 *) &Reply[0]) = 0x0;
 			break;
 
 		case XUSBPS_STATUS_ENDPOINT:
-			xil_printf("\r\n\r\n [request=00 requestType&mask=02 XUSBPS_STATUS_ENDPOINT]\r\n");
+			xil_printf(" [request=00 requestType&mask=02 XUSBPS_STATUS_ENDPOINT]\r\n");
 			{
 			u32 Status;
 			int EpNum = SetupData->wIndex;
@@ -308,7 +321,7 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 		break;
 
 	case XUSBPS_REQ_GET_INTERFACE:
-		xil_printf("\r\n\r\n [XUSBPS_REQ_GET_INTERFACE] Get interface %d/%d/%d\n",SetupData->wIndex, SetupData->wLength,InstancePtr->CurrentAltSetting);
+		xil_printf(" [XUSBPS_REQ_GET_INTERFACE] Get interface %d/%d/%d\n",SetupData->wIndex, SetupData->wLength,InstancePtr->CurrentAltSetting);
 #ifdef CH9_DEBUG
 		printf("Get interface %d/%d/%d\n",
 			SetupData->wIndex, SetupData->wLength,
@@ -322,7 +335,7 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 		break;
 
 	case XUSBPS_REQ_GET_DESCRIPTOR:
-		xil_printf("\r\n\r\n [XUSBPS_REQ_GET_DESCRIPTOR] Get desc %x/%d \r\n", (SetupData->wValue >> 8) & 0xff,SetupData->wLength);
+		xil_printf(" [XUSBPS_REQ_GET_DESCRIPTOR] Get desc %x/%d \r\n", (SetupData->wValue >> 8) & 0xff,SetupData->wLength);
 #ifdef CH9_DEBUG
 		printf("Get desc %x/%d\n", (SetupData->wValue >> 8) & 0xff,
 				SetupData->wLength);
@@ -353,10 +366,10 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 			xil_printf("DevDesc VID: %02x%02x\r\n",Reply[9],Reply[8]);
 			xil_printf("DevDesc PID: %02x%02x\r\n",Reply[11],Reply[10]);
 			xil_printf("DevDesc bcd: %02x%02x\r\n",Reply[13],Reply[12]);
-			xil_printf("\r\n\r\n mid\r\n\r\n\r\n");
+			xil_printf("[------------------]\r\n");
 			if(((SetupData->wValue >> 8) & 0xff) ==
 					XUSBPS_TYPE_DEVICE_QUALIFIER) {
-				xil_printf("re-set DevDesc\r\n");
+				xil_printf("[Reset DevDesc]\r\n");
 				//sizeof(USB_STD_DEV_DESC)
 				Reply[0] = (u8)ReplyLen;
                 //USB_DEVICE_DESC
@@ -510,6 +523,7 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 		 * zero length packet.
 		 */
 		XUsbPs_EpBufferSend(InstancePtr, 0, NULL, 0);
+		XUsbPs_EpBufferSend(InstancePtr, 0,"ddd",3);
 		break;
 
 
@@ -677,7 +691,10 @@ const static u8	Reply[8] = {0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17};
 	int 	Timeout;
 
 	/* Check the direction, USB 2.0 section 9.3 */
+	xil_printf("-----------------------[Vendor]\r\n");
 	xil_printf("-----------------------SetupData->bmRequestType: %02x\r\n",SetupData->bmRequestType);
+	xil_printf("-----------------------SetupData->bRequest: %02x\r\n",SetupData->bRequest);
+	xil_printf("-----------------------SetupData->wValue: %02x\r\n",SetupData->wValue);
 
 	Direction = SetupData->bmRequestType & (1 << 7);
 
