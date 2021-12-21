@@ -4,6 +4,9 @@
 #include "ui_QtWidgetsApplication2.h"
 #include<libusb.h>
 #include"myThread.h"
+#include<QImage>
+#include <QFileInfo>
+#include <QFileDialog>
 
 #define CTRL_STD_IN	        (LIBUSB_REQUEST_TYPE_STANDARD | LIBUSB_ENDPOINT_IN)
 #define CTRL_STD_OUT		(LIBUSB_REQUEST_TYPE_STANDARD | LIBUSB_ENDPOINT_OUT)
@@ -36,6 +39,7 @@ public:
     void openUSB();
     void writeData();
     void readData();
+    void openImg();
 
     libusb_device_handle* dev_handle = NULL;
     
@@ -44,7 +48,7 @@ private:
     Ui::QtWidgetsApplication2Class ui;
     bool openFlag;
     myThread* th1;
-    unsigned char dataReceive[100];
+    unsigned char dataReceive[1024];
     int lenth;
     int actualLenth;
 

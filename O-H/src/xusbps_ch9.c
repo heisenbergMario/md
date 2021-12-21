@@ -127,7 +127,7 @@ GUID_HEX //define from GUID.h file
 /************************** Function Prototypes ******************************/
 
 static void XUsbPs_StdDevReq(XUsbPs *InstancePtr,
-			      XUsbPs_SetupData *SetupData);
+			      XUsbPs_SetupData *SetupData, int* bulkEpDataLenth);
 
 static int XUsbPs_HandleVendorReq(XUsbPs *InstancePtr,
 					XUsbPs_SetupData *SetupData);
@@ -157,7 +157,7 @@ static u8 Response ALIGNMENT_CACHELINE;
 *
 ******************************************************************************/
 int XUsbPs_Ch9HandleSetupPacket(XUsbPs *InstancePtr,
-				 XUsbPs_SetupData *SetupData)
+				 XUsbPs_SetupData *SetupData,int* bulkEpDataLenth)
 {
 	int Status = XST_SUCCESS;
 
@@ -167,7 +167,7 @@ int XUsbPs_Ch9HandleSetupPacket(XUsbPs *InstancePtr,
 
 	switch (SetupData->bmRequestType & XUSBPS_REQ_TYPE_MASK) {
 	case XUSBPS_CMD_STDREQ:
-		XUsbPs_StdDevReq(InstancePtr, SetupData);
+		XUsbPs_StdDevReq(InstancePtr, SetupData,bulkEpDataLenth);
 		break;
 
 	case XUSBPS_CMD_CLASSREQ:
@@ -209,7 +209,7 @@ int XUsbPs_Ch9HandleSetupPacket(XUsbPs *InstancePtr,
 *
 ******************************************************************************/
 static void XUsbPs_StdDevReq(XUsbPs *InstancePtr,
-			      XUsbPs_SetupData *SetupData)
+			      XUsbPs_SetupData *SetupData,int* bulkEpDataLenth)
 {
 	int Status;
 	int Error = 0;
@@ -236,14 +236,15 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 	xil_printf("-----------------------[STD]\r\n");
 	xil_printf("-----------------------SetupData->bmRequestType: %02x\r\n",SetupData->bmRequestType);
 	xil_printf("-----------------------SetupData->bRequest: %02x\r\n",SetupData->bRequest);
-	xil_printf("-----------------------SetupData->wValue: %02x\r\n",SetupData->wValue);
+	xil_printf("-----------------------SetupData->wValue: %04x\r\n",SetupData->wValue);
+	xil_printf("-----------------------SetupData->wIndex: %04x\r\n",SetupData->wIndex);
 
 
 	Direction = SetupData->bmRequestType & (1 << 7);
 
 	xil_printf("-----------------------Direction: %02x\r\n",Direction);
 
-	xil_printf("-----------------------SetupData->wLength: %02x\r\n",SetupData->wLength);
+	xil_printf("-----------------------SetupData->wLength: %04x\r\n",SetupData->wLength);
 
 	UsbLocalPtr = (XUsbPs_Local *) InstancePtr->UserDataPtr;
 
@@ -523,7 +524,7 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 		 * zero length packet.
 		 */
 		XUsbPs_EpBufferSend(InstancePtr, 0, NULL, 0);
-		XUsbPs_EpBufferSend(InstancePtr, 0,"ddd",3);
+		//XUsbPs_EpBufferSend(InstancePtr, 0,"ddd",3);
 		break;
 
 
@@ -634,6 +635,12 @@ static u8  	Reply[XUSBPS_REQ_REPLY_LEN];
 		}
         break;
 
+	case 0xFF:
+		xil_printf("[RESERVE]\r\n");
+		(*bulkEpDataLenth) = (0x0FFFFFFF)&((SetupData->wValue<<16)|SetupData->wIndex);
+		xil_printf("bulkEpDataLenth: %08x\r\n",*bulkEpDataLenth);
+		xil_printf("bulkEpDataLenth: %d\r\n",*bulkEpDataLenth);
+		break;
 	default:
 		Error = 1;
 		break;
@@ -694,13 +701,15 @@ const static u8	Reply[8] = {0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17};
 	xil_printf("-----------------------[Vendor]\r\n");
 	xil_printf("-----------------------SetupData->bmRequestType: %02x\r\n",SetupData->bmRequestType);
 	xil_printf("-----------------------SetupData->bRequest: %02x\r\n",SetupData->bRequest);
-	xil_printf("-----------------------SetupData->wValue: %02x\r\n",SetupData->wValue);
+	xil_printf("-----------------------SetupData->wValue: %04x\r\n",SetupData->wValue);
+	xil_printf("-----------------------SetupData->wIndex: %04x\r\n",SetupData->wIndex);
+
 
 	Direction = SetupData->bmRequestType & (1 << 7);
 
 	xil_printf("-----------------------Direction: %02x\r\n",Direction);
 
-	xil_printf("-----------------------SetupData->wLength: %02x\r\n",SetupData->wLength);
+	xil_printf("-----------------------SetupData->wLength: %04x\r\n",SetupData->wLength);
 	if (!Direction) {
 		/* Control OUT vendor request */
 		if (SetupData->wLength > 0) {

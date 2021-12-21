@@ -467,16 +467,19 @@ static void XUsbPs_Ep0EventHandler(void *CallBackRef, u8 EpNum,
 
 	InstancePtr = (XUsbPs *) CallBackRef;
 
-	xil_printf("\r\n\r\n EventType: %d\r\n", EventType);
+	xil_printf("\r\n\r\n Ep%d EventType: %d\r\n", EpNum,EventType);
 
 	switch (EventType) {
 
 	/* Handle the Setup Packets received on Endpoint 0. */
 	case XUSBPS_EP_EVENT_SETUP_DATA_RECEIVED:
+		xil_printf("XUSBPS_EP_EVENT_SETUP_DATA_RECEIVED\r\n");
 		Status = XUsbPs_EpGetSetupData(InstancePtr, EpNum, &SetupData);
 		if (XST_SUCCESS == Status) {
 			/* Handle the setup packet. */
-			(int) XUsbPs_Ch9HandleSetupPacket(InstancePtr,&SetupData);
+			(int) XUsbPs_Ch9HandleSetupPacket(InstancePtr,&SetupData,&bulkEpDataLenth);
+
+			xil_printf(" bulkEpDataLenth: %d\r\n", bulkEpDataLenth);
 		}
 		break;
 
@@ -485,6 +488,7 @@ static void XUsbPs_Ep0EventHandler(void *CallBackRef, u8 EpNum,
 	 * taken.
 	 */
 	case XUSBPS_EP_EVENT_DATA_RX:
+		xil_printf("XUSBPS_EP_EVENT_DATA_RX\r\n");
 		/* Get the data buffer. */
 		Status = XUsbPs_EpBufferReceive(InstancePtr, EpNum,
 					&BufferPtr, &BufferLen, &Handle);
@@ -548,12 +552,14 @@ static void XUsbPs_Ep1EventHandler(void *CallBackRef, u8 EpNum,
 
 	InstancePtr = (XUsbPs *) CallBackRef;
 
+	xil_printf("\r\n\r\n Ep%d EventType: %d\r\n", EpNum,EventType);
+
 	switch (EventType) {
 	case XUSBPS_EP_EVENT_DATA_RX:
 		/* Get the data buffer.*/
 		Status = XUsbPs_EpBufferReceive(InstancePtr, EpNum,
 					&BufferPtr, &BufferLen, &Handle);
-		xil_printf("\r\n\r\n BufferPtr: %s", BufferPtr);
+		xil_printf("BufferPtr: %s", BufferPtr);
 		/* Invalidate the Buffer Pointer */
 		InavalidateLen =  BufferLen;
 		if (BufferLen % 32) {
@@ -592,12 +598,14 @@ static void XUsbPs_Ep2EventHandler(void *CallBackRef, u8 EpNum,
 
 	InstancePtr = (XUsbPs *) CallBackRef;
 
+	xil_printf("\r\n\r\n Ep%d EventType: %d\r\n", EpNum,EventType);
+
 	switch (EventType) {
 	case XUSBPS_EP_EVENT_DATA_RX:
 		/* Get the data buffer.*/
 		Status = XUsbPs_EpBufferReceive(InstancePtr, EpNum,
 					&BufferPtr, &BufferLen, &Handle);
-		xil_printf("\r\n\r\n BufferPtr: %s", BufferPtr);
+		xil_printf("BufferPtr: %s", BufferPtr);
 		/* Invalidate the Buffer Pointer */
 		InavalidateLen =  BufferLen;
 		if (BufferLen % 32) {
@@ -636,12 +644,14 @@ static void XUsbPs_Ep3EventHandler(void *CallBackRef, u8 EpNum,
 
 	InstancePtr = (XUsbPs *) CallBackRef;
 
+	xil_printf("\r\n\r\n Ep%d EventType: %d\r\n", EpNum,EventType);
+
 	switch (EventType) {
 	case XUSBPS_EP_EVENT_DATA_RX:
 		/* Get the data buffer.*/
 		Status = XUsbPs_EpBufferReceive(InstancePtr, EpNum,
 					&BufferPtr, &BufferLen, &Handle);
-		xil_printf("\r\n\r\n BufferPtr: %s", BufferPtr);
+		xil_printf("BufferPtr: %s", BufferPtr);
 		/* Invalidate the Buffer Pointer */
 		InavalidateLen =  BufferLen;
 		if (BufferLen % 32) {

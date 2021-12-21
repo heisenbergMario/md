@@ -189,7 +189,7 @@ typedef struct {
 /************************** Function Prototypes ******************************/
 
 int XUsbPs_Ch9HandleSetupPacket(XUsbPs *InstancePtr,
-				 XUsbPs_SetupData *SetupData);
+				 XUsbPs_SetupData *SetupData, int* bulkEpDataLenth);
 
 
 #ifdef __cplusplus

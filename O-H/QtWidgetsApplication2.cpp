@@ -47,6 +47,8 @@ void QtWidgetsApplication2::lot() {
     return;
 }
 
+
+
 void QtWidgetsApplication2::openUSB() {   
     ui.lw3->addItem("\r\n openUSB");
     int r = 255;
@@ -129,6 +131,32 @@ void QtWidgetsApplication2::openUSB() {
         }
     }    
 }
+
+void QtWidgetsApplication2::openImg()
+{
+    QString fileName, openFilePath;
+    QImage img;
+    fileName = QFileDialog::getOpenFileName(
+        this,
+        "选择图片",
+        "",
+        "Image Files(*.jpg *.png *.bmp *.pgm *.pbm);;All(*.*)"
+    );
+    if (fileName.isEmpty())
+    {
+        ui.lw3->addItem("[ERR]null image");
+        return;
+    }    
+    QPixmap pix;
+    pix.load(fileName);
+    QByteArray byteArray;
+    QDataStream dataStream(&byteArray, QIODevice::WriteOnly);
+    dataStream << pix;
+    QString str = QString::fromLocal8Bit(byteArray.toBase64());
+    ui.lw2->addItem("\r\n "+str);
+    ui.lw2->scrollToBottom();
+}
+
 
 void QtWidgetsApplication2::btnA1() {
     ui.lw3->addItem("\r\n btnA1");
@@ -274,6 +302,7 @@ void QtWidgetsApplication2::btnG1() {
 
 void QtWidgetsApplication2::btnH1() {
     ui.lw3->addItem("\r\n btnH1");
+    openImg();
     ui.lw3->scrollToBottom();
 }
 
@@ -475,7 +504,59 @@ void QtWidgetsApplication2::btnC2() {
 
 void QtWidgetsApplication2::btnD2() {
     ui.lw3->addItem("\r\n btnD2");
-    
+    int r = 0;
+    bool ok;
+    int requestType = 0x00;
+    if (!ui.leD1->text().isEmpty())
+    {
+        requestType = ui.leD1->text().toInt(&ok, 16);
+    }
+    int request = 0x00;
+    if (!ui.leD2->text().isEmpty())
+    {
+        request = ui.leD2->text().toInt(&ok, 16);
+    }
+    int value = 0x0000;
+    if (!ui.leD3->text().isEmpty())
+    {
+        value = ui.leD3->text().toInt(&ok, 16);
+    }
+    int index = 0x0000;
+    if (!ui.leD4->text().isEmpty())
+    {
+        index = ui.leD4->text().toInt(&ok, 16);
+    }
+    int lenth = 0x0000;
+    if (!ui.leD5->text().isEmpty())
+    {
+        lenth = ui.leD5->text().toInt(&ok, 16);
+    }
+    /*
+    dev_handle: 这就是之前libopen函数获得的句柄
+    bmRequestType: 请求字段的类型
+                   D7:0=HOST2DEVICE,1=DEVICE2HOST
+                   D6:0=标准,1=类,2=厂商,3=保留
+                   D4~D0:0=设备,1=接口,2=端点,3=其他,4...31=保留
+    bRequest: 命令
+    wValue: reportType+reportID
+    wIndex: 简单点可以理解为字段内容的位置，假设你选择准备发送string类型的话，可以会有多个string，分开发送，那肯定就会出现index从0开始到N结束。
+    data 字段内容
+    wLength 字段内容长度，记得+1
+    timeout 超时设置，以毫秒为单位
+    */
+    r = libusb_control_transfer(dev_handle, requestType, request, value, index, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), lenth, 100);
+    if (r < 0)
+    {
+        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+        ui.lw3->scrollToBottom();
+        return;
+    }
+    else
+    {
+        //ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
+        //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
+        ui.lw3->scrollToBottom();
+    }
     ui.lw3->scrollToBottom();
 }
 
@@ -643,6 +724,59 @@ void QtWidgetsApplication2::btnC3() {
 
 void QtWidgetsApplication2::btnD3() {
     ui.lw3->addItem("\r\n btnD3");
+    int r = 0;
+    bool ok;
+    int requestType = 0x00;
+    if (!ui.leD1->text().isEmpty())
+    {
+        requestType = ui.leD1->text().toInt(&ok, 16);
+    }
+    int request = 0x00;
+    if (!ui.leD2->text().isEmpty())
+    {
+        request = ui.leD2->text().toInt(&ok, 16);
+    }
+    int value = 0x0000;
+    if (!ui.leD3->text().isEmpty())
+    {
+        value = ui.leD3->text().toInt(&ok, 16);
+    }
+    int index = 0x00;
+    if (!ui.leD4->text().isEmpty())
+    {
+        index = ui.leD4->text().toInt(&ok, 16);
+    }
+    int lenth = 0x0000;
+    if (!ui.leD5->text().isEmpty())
+    {
+        lenth = ui.leD5->text().toInt(&ok, 16);
+    }
+    /*
+    dev_handle: 这就是之前libopen函数获得的句柄
+    bmRequestType: 请求字段的类型
+                   D7:0=HOST2DEVICE,1=DEVICE2HOST
+                   D6:0=标准,1=类,2=厂商,3=保留
+                   D4~D0:0=设备,1=接口,2=端点,3=其他,4...31=保留
+    bRequest: 命令
+    wValue: reportType+reportID
+    wIndex: 简单点可以理解为字段内容的位置，假设你选择准备发送string类型的话，可以会有多个string，分开发送，那肯定就会出现index从0开始到N结束。
+    data: 字段内容
+    wLength 字段内容长度，记得+1
+    timeout 超时设置，以毫秒为单位
+    */
+    r = libusb_control_transfer(dev_handle, requestType, request, value, index, dataReceive, lenth, 100);
+    if (r < 0)
+    {
+        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+        ui.lw3->scrollToBottom();
+        return;
+    }
+    else
+    {
+        //ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
+        //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
+        ui.lw3->scrollToBottom();
+    }
     ui.lw3->scrollToBottom();
 }
 

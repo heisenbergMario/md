@@ -392,6 +392,7 @@ u32 XUsbPs_Ch9SetupStrDescReply(u8 *BufPtr, u32 BufLen, u8 Index)
 
 	String = StringList[Index];
 	StringLen = strlen(String);
+	xil_printf("XUsbPs_Ch9SetupStrDescReply StringList[Index]: %s(%d)\r\n",String,StringLen);
 
 	StringDesc = (USB_STD_STRING_DESC *) TmpBuf;
 
