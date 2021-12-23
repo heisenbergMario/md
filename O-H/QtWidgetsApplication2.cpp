@@ -134,8 +134,7 @@ void QtWidgetsApplication2::openUSB() {
 
 void QtWidgetsApplication2::openImg()
 {
-    QString fileName, openFilePath;
-    QImage img;
+    QString fileName, openFilePath;   
     fileName = QFileDialog::getOpenFileName(
         this,
         "Ñ¡ÔñÍ¼Æ¬",
@@ -147,14 +146,41 @@ void QtWidgetsApplication2::openImg()
         ui.lw3->addItem("[ERR]null image");
         return;
     }    
-    QPixmap pix;
-    pix.load(fileName);
-    QByteArray byteArray;
-    QDataStream dataStream(&byteArray, QIODevice::WriteOnly);
-    dataStream << pix;
-    QString str = QString::fromLocal8Bit(byteArray.toBase64());
-    ui.lw2->addItem("\r\n "+str);
+    /*QImage imgOrigal(fileName);
+    QRgb* lineOrigal = (QRgb*)imgOrigal.scanLine(0);
+    ui.lw2->addItem(QString::number(lineOrigal[0], 16));
+    ui.lw2->addItem(QString::number(lineOrigal[1], 16));
+    ui.lw2->addItem(QString::number(lineOrigal[2], 16));
+    ui.lw2->addItem(QString::number(lineOrigal[3], 16));
+    ui.lw2->addItem("\r\n\r\n");
+    QImage img = imgOrigal.convertToFormat(QImage::Format_RGB888);
+    QRgb* line = (QRgb*)img.scanLine(0);
+    ui.lw2->addItem(QString::number(line[0], 16));
+    ui.lw2->addItem(QString::number(line[1], 16));
+    ui.lw2->addItem(QString::number(line[2], 16));
+    ui.lw2->addItem(QString::number(line[3], 16));*/
+    /*for (int i = 0; i < img.height(); i++)
+    {
+        ui.lw2->addItem("\r\n" + QString::number(i));
+        QRgb* line =(QRgb*)img.scanLine(i);
+        for (int j = 0; j < img.width(); j++)
+        {
+            ui.lw2->addItem(QString::number(line[j], 16));
+        }              
+    }*/
+    
+    Mat m = imread(fileName.toStdString());
+    for (int i = 0; i < m.rows; i++)
+    {
+        for (int j = 0; j < m.cols; j++)
+        {
+            ui.lw2->addItem(QString::number(m.ptr<Vec3b>(i)[j][0], 16));
+        }
+    }
+    imshow("m", m);
+    //ui.lw2->addItem("\r\n "+str);
     ui.lw2->scrollToBottom();
+    ui.lw2->addItem("\r\n\r\n");
 }
 
 
@@ -302,7 +328,7 @@ void QtWidgetsApplication2::btnG1() {
 
 void QtWidgetsApplication2::btnH1() {
     ui.lw3->addItem("\r\n btnH1");
-    openImg();
+    openImg();    
     ui.lw3->scrollToBottom();
 }
 

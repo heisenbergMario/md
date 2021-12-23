@@ -310,7 +310,20 @@
        <widget class="QListWidget" name="lw1"/>
       </item>
       <item>
-       <widget class="QListWidget" name="lw2"/>
+       <widget class="QListWidget" name="lw2">
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="isWrapping" stdset="0">
+         <bool>false</bool>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QListWidget" name="lw3"/>

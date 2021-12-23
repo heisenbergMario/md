@@ -7,6 +7,9 @@
 #include<QImage>
 #include <QFileInfo>
 #include <QFileDialog>
+#include<opencv2/opencv.hpp>
+using namespace cv;
+using namespace std;
 
 #define CTRL_STD_IN	        (LIBUSB_REQUEST_TYPE_STANDARD | LIBUSB_ENDPOINT_IN)
 #define CTRL_STD_OUT		(LIBUSB_REQUEST_TYPE_STANDARD | LIBUSB_ENDPOINT_OUT)
