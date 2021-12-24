@@ -5,6 +5,7 @@
 #include<libusb.h>
 #include"myThread.h"
 #include<QImage>
+#include <QBuffer>
 #include <QFileInfo>
 #include <QFileDialog>
 #include<opencv2/opencv.hpp>
@@ -43,6 +44,11 @@ public:
     void writeData();
     void readData();
     void openImg();
+    void qtPrintImg(QImage imgOrigal);
+    void qtShowImg(QImage imgOrigal);
+    void cvPrintImg(Mat m);
+    void cvShowImg(Mat m);
+    
 
     libusb_device_handle* dev_handle = NULL;
     

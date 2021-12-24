@@ -305,9 +305,9 @@
      <property name="title">
       <string/>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QListWidget" name="lw1"/>
+       <widget class="QTextBrowser" name="tb"/>
       </item>
       <item>
        <widget class="QListWidget" name="lw2">

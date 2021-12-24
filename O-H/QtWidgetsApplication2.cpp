@@ -5,6 +5,7 @@ https://blog.csdn.net/duan_xiaosu/article/details/68930643
 #include "QtWidgetsApplication2.h"
 
 
+
 QtWidgetsApplication2::QtWidgetsApplication2(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -46,8 +47,6 @@ void QtWidgetsApplication2::lot() {
     }
     return;
 }
-
-
 
 void QtWidgetsApplication2::openUSB() {   
     ui.lw3->addItem("\r\n openUSB");
@@ -145,44 +144,118 @@ void QtWidgetsApplication2::openImg()
     {
         ui.lw3->addItem("[ERR]null image");
         return;
-    }    
-    /*QImage imgOrigal(fileName);
-    QRgb* lineOrigal = (QRgb*)imgOrigal.scanLine(0);
-    ui.lw2->addItem(QString::number(lineOrigal[0], 16));
-    ui.lw2->addItem(QString::number(lineOrigal[1], 16));
-    ui.lw2->addItem(QString::number(lineOrigal[2], 16));
-    ui.lw2->addItem(QString::number(lineOrigal[3], 16));
-    ui.lw2->addItem("\r\n\r\n");
-    QImage img = imgOrigal.convertToFormat(QImage::Format_RGB888);
-    QRgb* line = (QRgb*)img.scanLine(0);
-    ui.lw2->addItem(QString::number(line[0], 16));
-    ui.lw2->addItem(QString::number(line[1], 16));
-    ui.lw2->addItem(QString::number(line[2], 16));
-    ui.lw2->addItem(QString::number(line[3], 16));*/
-    /*for (int i = 0; i < img.height(); i++)
-    {
-        ui.lw2->addItem("\r\n" + QString::number(i));
-        QRgb* line =(QRgb*)img.scanLine(i);
-        for (int j = 0; j < img.width(); j++)
-        {
-            ui.lw2->addItem(QString::number(line[j], 16));
-        }              
-    }*/
+    }        
+    /*QImage*/
+    QImage img(fileName);
+    qtPrintImg(img);
+
+    /*OpenCV*/
+    Mat m = imread(fileName.toStdString()); 
+    //cvPrintImg(m);
+    cvShowImg(m);      
+}
+
+void QtWidgetsApplication2::qtPrintImg(QImage img)
+{     
+    QString str;
+    str= QString::fromUtf8(reinterpret_cast<char*>(img.bits()));
+    /*method1:*/
+    str.append(img.bytesPerLine());
+    str.append("\r\n\r\n");
+    str.append(img.scanLine(0))
+
+    /*method2: QRgb遍历*/
+    //for (int i = 0; i < img.height(); i++)
+    //{
+    //    QRgb* line =(QRgb*)img.scanLine(i);
+    //    for (int j = 0; j < img.width(); j++)
+    //    {
+    //        str.append(QString::number(line[j], 16));
+    //        //ui.tb->append(QString::number(line[j], 16));
+    //    }
+    //}
+    ui.tb->append(str);
+}
+
+void QtWidgetsApplication2::qtShowImg(QImage img)
+{
+
+}
+
+void QtWidgetsApplication2::cvPrintImg(Mat m)
+{
+    /*method1: mat直接转qstring*/
+    /*ostringstream oss;
+    oss << m;
+    QString str(oss.str().c_str());*/
     
-    Mat m = imread(fileName.toStdString());
+
+    /*method2: 指针遍历*/
+    QString str;
     for (int i = 0; i < m.rows; i++)
     {
         for (int j = 0; j < m.cols; j++)
         {
-            ui.lw2->addItem(QString::number(m.ptr<Vec3b>(i)[j][0], 16));
+            /*ui.tb->append(QString::number(m.ptr<Vec3b>(i)[j][0], 16));
+            ui.tb->append(QString::number(m.ptr<Vec3b>(i)[j][1], 16));
+            ui.tb->append(QString::number(m.ptr<Vec3b>(i)[j][2], 16));
+            str.append(m.ptr<Vec3b>(i)[j][0]
+                + m.ptr<Vec3b>(i)[j][1]
+                + m.ptr<Vec3b>(i)[j][2]
+            );*/
+            str.append(QString::number(m.ptr<Vec3b>(i)[j][0],16)
+                + QString::number(m.ptr<Vec3b>(i)[j][1],16)
+                + QString::number(m.ptr<Vec3b>(i)[j][2],16)
+            );            
         }
     }
-    imshow("m", m);
-    //ui.lw2->addItem("\r\n "+str);
-    ui.lw2->scrollToBottom();
-    ui.lw2->addItem("\r\n\r\n");
+    ui.tb->append(str);
 }
 
+void QtWidgetsApplication2::cvShowImg(Mat m)
+{
+    //LUT
+    Mat matSingleOut, matThreeOut;
+    //Single
+    uchar lutReverse[256];
+    for (int i = 0; i < 256; i++)
+    {
+        lutReverse[i] = 255 - i;
+    }
+    Mat matReverse(1, 256, CV_8U, lutReverse);
+    LUT(m, matReverse, matSingleOut);
+    //Three
+    uchar lutFirst[256];
+    for (int i = 0; i < 256; i++)
+    {
+        lutFirst[i] = i / 2;
+    }
+    Mat matFirst(1, 256, CV_8U, lutFirst);
+    uchar lutSecond[256];
+    for (int i = 0; i < 256; i++)
+    {
+        lutSecond[i] = i / 3;
+    }
+    Mat matsecond(1, 256, CV_8U, lutSecond);
+    uchar lutThird[256];
+    for (int i = 0; i < 256; i++)
+    {
+        lutThird[i] = i / 4;
+    }
+    Mat matThird(1, 256, CV_8U, lutThird);
+    vector<Mat> mergeMats;
+    mergeMats.push_back(matFirst);
+    mergeMats.push_back(matsecond);
+    mergeMats.push_back(matThird);
+    Mat matThree;
+    merge(mergeMats, matThree);
+    LUT(m, matThree, matThreeOut);
+    imshow("m", m);
+    imshow("n", matSingleOut);
+    imshow("p", matThreeOut);
+    moveWindow("n", 500, 1);
+    moveWindow("p", 1000, 1);
+}
 
 void QtWidgetsApplication2::btnA1() {
     ui.lw3->addItem("\r\n btnA1");
