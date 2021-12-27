@@ -352,15 +352,19 @@ void XUsbPs_HandleBulkReq1(XUsbPs *InstancePtr, u8 EpNum,
 				u8 *BufferPtr, u32 BufferLen, int NumIrqs, int NumReceivedFrames)
 {
 	int status;
+	usleep(2000);
+	usleep(2000);
+	usleep(2000);
+	usleep(2000);
 	xil_printf("\r\n [Rece %d byte] numIrqs:%d numRecFrame:%d###%s " ,BufferLen, NumIrqs, NumReceivedFrames, BufferPtr);
 	//status = XUsbPs_EpBufferSend(InstancePtr,1,"ddd",3);
-	status = XUsbPs_EpBufferSend(InstancePtr,EpNum,BufferPtr,BufferLen);
+	/*status = XUsbPs_EpBufferSend(InstancePtr,EpNum,BufferPtr,BufferLen);
 	if (status == XST_SUCCESS) {
 			xil_printf("\r\n [Send %d byte] numIrqs:%d numRecFrame:%d###%s" ,BufferLen, NumIrqs, NumReceivedFrames, BufferPtr);
 		}
 	else {
 		xil_printf("\r\n *******************************************************\r\n numIrqs:%d numRecFrame:%d send NG:\r\n %s %d byte", NumIrqs, NumReceivedFrames, BufferPtr,BufferLen);
-	}
+	}*/
 }
 
 void XUsbPs_HandleBulkReq2(XUsbPs *InstancePtr, u8 EpNum,

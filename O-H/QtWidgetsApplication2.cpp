@@ -157,24 +157,65 @@ void QtWidgetsApplication2::openImg()
 
 void QtWidgetsApplication2::qtPrintImg(QImage img)
 {     
-    QString str;
-    str= QString::fromUtf8(reinterpret_cast<char*>(img.bits()));
-    /*method1:*/
-    str.append(img.bytesPerLine());
-    str.append("\r\n\r\n");
-    str.append(img.scanLine(0))
-
+    uchar* imgData;
+    int r = 0;
+    int actualLenth = 0;
+    int timeout = 2000;    
+    uchar* p = img.bits();
+    QString str = QString::fromUtf8(reinterpret_cast<char*>(img.bits()), img.byteCount());
+    ui.tb->append(QString::number(img.byteCount()));
+    ui.tb->append(QString::number(img.colorCount()));    
+    //r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)p, img.byteCount(), &actualLenth, timeout);
+    //if (r < 0)
+    //{
+    //    ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+    //    return;
+    //}
+    //else
+    //{
+    //    ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
+    //    //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
+    //}
+    /*method1:指针遍历*/
+    //for (int i = 0; i < (img.width() * img.height() * 3); i++)
+    //{
+    //    int j = i;
+    //    r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)p[i], ui.pte1->toPlainText().length(), &actualLenth, timeout);
+    //    if (r < 0)
+    //    {
+    //        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
+    //        //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
+    //    }
+    //    //ui.tb->append(QString::number(p[i]));
+    //}
     /*method2: QRgb遍历*/
     //for (int i = 0; i < img.height(); i++)
     //{
     //    QRgb* line =(QRgb*)img.scanLine(i);
-    //    for (int j = 0; j < img.width(); j++)
+    //    r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)line, img.bytesPerLine(), &actualLenth, timeout);
+    //    if (r < 0)
     //    {
-    //        str.append(QString::number(line[j], 16));
+    //        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
+    //        //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
+    //    }
+    //    for (int j = 0; j < img.width(); j++)
+    //    {            
+    //        //str.append(QString::number(line[j], 16));
     //        //ui.tb->append(QString::number(line[j], 16));
     //    }
+    //    ui.tb->append((QString::number)(*line));
     //}
-    ui.tb->append(str);
+    ui.tb->append(str);         
 }
 
 void QtWidgetsApplication2::qtShowImg(QImage img)
@@ -183,13 +224,25 @@ void QtWidgetsApplication2::qtShowImg(QImage img)
 }
 
 void QtWidgetsApplication2::cvPrintImg(Mat m)
-{
+{    
+    int r = 0;
+    int actualLenth = 0;
+    int timeout = 2000;
     /*method1: mat直接转qstring*/
-    /*ostringstream oss;
-    oss << m;
-    QString str(oss.str().c_str());*/
-    
-
+    //ostringstream oss;
+    //oss << m;
+    //QString str(oss.str().c_str());
+    //r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)str.toLatin1().data(), str.length(), &actualLenth, timeout);
+    //if (r < 0)
+    //{
+    //    ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+    //    return;
+    //}
+    //else
+    //{
+    //    ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
+    //    //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
+    //}
     /*method2: 指针遍历*/
     QString str;
     for (int i = 0; i < m.rows; i++)
@@ -206,8 +259,19 @@ void QtWidgetsApplication2::cvPrintImg(Mat m)
             str.append(QString::number(m.ptr<Vec3b>(i)[j][0],16)
                 + QString::number(m.ptr<Vec3b>(i)[j][1],16)
                 + QString::number(m.ptr<Vec3b>(i)[j][2],16)
-            );            
+            );           
         }
+    }
+    r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)str.toLatin1().data(), str.length(), &actualLenth, timeout);
+    if (r < 0)
+    {
+        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+        return;
+    }
+    else
+    {
+        ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
+        //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
     }
     ui.tb->append(str);
 }
@@ -361,7 +425,7 @@ void QtWidgetsApplication2::btnF1() {
     ui.lw3->addItem("\r\n btnF1: ep3 write");   
     ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
     int r = 0;
-    r = libusb_bulk_transfer(dev_handle, EP3_OUT, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), &actualLenth, 1000);
+    r = libusb_bulk_transfer(dev_handle, EP3_OUT, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), &actualLenth, 2000);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));

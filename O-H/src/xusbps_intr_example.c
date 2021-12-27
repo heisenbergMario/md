@@ -552,6 +552,7 @@ static void XUsbPs_Ep1EventHandler(void *CallBackRef, u8 EpNum,
 
 	InstancePtr = (XUsbPs *) CallBackRef;
 
+
 	xil_printf("\r\n\r\n Ep%d EventType: %d\r\n", EpNum,EventType);
 
 	switch (EventType) {
