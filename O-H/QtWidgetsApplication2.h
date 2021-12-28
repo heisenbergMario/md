@@ -41,8 +41,9 @@ class QtWidgetsApplication2 : public QMainWindow
 public:
     QtWidgetsApplication2(QWidget *parent = Q_NULLPTR);
     void openUSB();
-    void writeData();
+    void writeData();    
     void readData();
+    void writeDataA(unsigned char* data, int lenth, int timeout);
     void openImg();
     void qtPrintImg(QImage imgOrigal);
     void qtShowImg(QImage imgOrigal);
