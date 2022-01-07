@@ -157,6 +157,12 @@ void QtWidgetsApplication2::openImg()
 
 void QtWidgetsApplication2::qtPrintImg(QImage img)
 {     
+    QByteArray byteArray;
+    QDataStream dataStream(&byteArray, QIODevice::WriteOnly);
+    dataStream << QPixmap::fromImage(img);
+    QString str = QString::fromLocal8Bit(byteArray.toBase64());
+    ui.tb->append(str);
+
     uchar* imgData;
     int r = 0;
     int actualLenth = 0;
