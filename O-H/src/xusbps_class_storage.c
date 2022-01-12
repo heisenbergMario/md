@@ -356,7 +356,9 @@ void XUsbPs_HandleBulkReq1(XUsbPs *InstancePtr, u8 EpNum,
 	usleep(2000);
 	usleep(2000);
 	usleep(2000);
-	xil_printf("\r\n [Rece %d byte] numIrqs:%d numRecFrame:%d###%s " ,BufferLen, NumIrqs, NumReceivedFrames, BufferPtr);
+	//xil_printf("\r\n [Rece %d byte] numIrqs:%d numRecFrame:%d###%s " ,BufferLen, NumIrqs, NumReceivedFrames, BufferPtr);
+	xil_printf("%s " , BufferPtr);
+
 	//status = XUsbPs_EpBufferSend(InstancePtr,1,"ddd",3);
 	/*status = XUsbPs_EpBufferSend(InstancePtr,EpNum,BufferPtr,BufferLen);
 	if (status == XST_SUCCESS) {

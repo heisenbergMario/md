@@ -293,11 +293,11 @@ static int UsbIntrExample(XScuGic *IntcInstancePtr, XUsbPs *UsbInstancePtr,
 
 	DeviceConfig.EpCfg[1].Out.Type		= XUSBPS_EP_TYPE_BULK;
 	DeviceConfig.EpCfg[1].Out.NumBufs	= 16;
-	DeviceConfig.EpCfg[1].Out.BufSize	= 512;
-	DeviceConfig.EpCfg[1].Out.MaxPacketSize	= 512;
+	DeviceConfig.EpCfg[1].Out.BufSize	= 1024;
+	DeviceConfig.EpCfg[1].Out.MaxPacketSize	= 1024;
 	DeviceConfig.EpCfg[1].In.Type		= XUSBPS_EP_TYPE_BULK;
 	DeviceConfig.EpCfg[1].In.NumBufs	= 16;
-	DeviceConfig.EpCfg[1].In.MaxPacketSize	= 512;
+	DeviceConfig.EpCfg[1].In.MaxPacketSize	= 1024;
 
 	DeviceConfig.EpCfg[2].Out.Type		= XUSBPS_EP_TYPE_BULK;
 	DeviceConfig.EpCfg[2].Out.NumBufs	= 16;
@@ -552,15 +552,15 @@ static void XUsbPs_Ep1EventHandler(void *CallBackRef, u8 EpNum,
 
 	InstancePtr = (XUsbPs *) CallBackRef;
 
-
-	xil_printf("\r\n\r\n Ep%d EventType: %d\r\n", EpNum,EventType);
+	*BufferPtr="";
+	//xil_printf("\r\n\r\n Ep%d EventType: %d\r\n", EpNum,EventType);
 
 	switch (EventType) {
 	case XUSBPS_EP_EVENT_DATA_RX:
 		/* Get the data buffer.*/
 		Status = XUsbPs_EpBufferReceive(InstancePtr, EpNum,
 					&BufferPtr, &BufferLen, &Handle);
-		xil_printf("BufferPtr: %s", BufferPtr);
+		//xil_printf("BufferPtr: %s", BufferPtr);
 		/* Invalidate the Buffer Pointer */
 		InavalidateLen =  BufferLen;
 		if (BufferLen % 32) {
