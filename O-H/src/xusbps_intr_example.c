@@ -301,19 +301,19 @@ static int UsbIntrExample(XScuGic *IntcInstancePtr, XUsbPs *UsbInstancePtr,
 
 	DeviceConfig.EpCfg[2].Out.Type		= XUSBPS_EP_TYPE_BULK;
 	DeviceConfig.EpCfg[2].Out.NumBufs	= 16;
-	DeviceConfig.EpCfg[2].Out.BufSize	= 512;
-	DeviceConfig.EpCfg[2].Out.MaxPacketSize	= 512;
+	DeviceConfig.EpCfg[2].Out.BufSize	= 1024;
+	DeviceConfig.EpCfg[2].Out.MaxPacketSize	= 1024;
 	DeviceConfig.EpCfg[2].In.Type		= XUSBPS_EP_TYPE_BULK;
 	DeviceConfig.EpCfg[2].In.NumBufs	= 16;
-	DeviceConfig.EpCfg[2].In.MaxPacketSize	= 512;
+	DeviceConfig.EpCfg[2].In.MaxPacketSize	= 1024;
 
 	DeviceConfig.EpCfg[3].Out.Type		= XUSBPS_EP_TYPE_BULK;
 	DeviceConfig.EpCfg[3].Out.NumBufs	= 16;
-	DeviceConfig.EpCfg[3].Out.BufSize	= 512;
-	DeviceConfig.EpCfg[3].Out.MaxPacketSize	= 512;
+	DeviceConfig.EpCfg[3].Out.BufSize	= 1024;
+	DeviceConfig.EpCfg[3].Out.MaxPacketSize	= 1024;
 	DeviceConfig.EpCfg[3].In.Type		= XUSBPS_EP_TYPE_BULK;
 	DeviceConfig.EpCfg[3].In.NumBufs	= 16;
-	DeviceConfig.EpCfg[3].In.MaxPacketSize	= 512;
+	DeviceConfig.EpCfg[3].In.MaxPacketSize	= 1024;
 
 	DeviceConfig.NumEndpoints = NumEndpoints;
 

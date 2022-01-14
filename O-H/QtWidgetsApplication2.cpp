@@ -302,6 +302,11 @@ void QtWidgetsApplication2::writeData() {
     //        //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
     //    }
     //}
+    QString str;
+    for (int i = 0; i < ui.pte1->toPlainText().length(); i++)
+    {
+        
+    }
     r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), &actualLenth, timeout);
     if (r < 0)
     {        
