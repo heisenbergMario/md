@@ -287,27 +287,48 @@ void QtWidgetsApplication2::writeData() {
     ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
     int r = 0;
     int actualLenth = 0;
-    int timeout = 5000;
-    //for (int i = 0; i < ui.pte1->toPlainText().length(); i++)
-    //{
-    //    r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)ui.pte1->toPlainText().toLatin1().data()[i], 1, &actualLenth, 1);
-    //    if (r < 0)
-    //    {
-    //        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
-    //        return;
-    //    }
-    //    else
-    //    {
-    //        ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
-    //        //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
-    //    }
-    //}
-    QString str;
-    for (int i = 0; i < ui.pte1->toPlainText().length(); i++)
+    int timeout = 5000;  
+
+    QString str = ui.pte1->toPlainText();  
+    char* ch;
+    QByteArray ba = str.toLatin1();
+    ch = ba.data();
+
+    std::string stdStr = str.toStdString();
+    std::string hexStr ="";
+    const char* cch = stdStr.c_str();
+
+    unsigned char* uch = new unsigned char[str.length()/2];
+    unsigned char low, high, highLow;
+    for (int i = 0; i < str.length(); i++)
     {
-        
+        if ((cch[i] >= '0') && (cch[i] <= '9'))
+            high = cch[i] - '0';//16进制中的，字符0-9转化成10进制，还是0-9
+        else if ((cch[i] >= 'A') && (cch[i] <= 'F'))
+            high = cch[i] - 'A' + 10;//16进制中的A-F，分别对应着11-16
+        else if ((cch[i] >= 'a') && (cch[i] <= 'f'))
+            high = cch[i] - 'a' + 10;//16进制中的a-f，分别对应也是11-16，不区分大小写
+        else
+            ;   // 其他返回0x10
+        if (++i < str.length())
+        {
+            if ((cch[i] >= '0') && (cch[i] <= '9'))
+                low = cch[i] - '0';//16进制中的，字符0-9转化成10进制，还是0-9
+            else if ((cch[i] >= 'A') && (cch[i] <= 'F'))
+                low = cch[i] - 'A' + 10;//16进制中的A-F，分别对应着11-16
+            else if ((cch[i] >= 'a') && (cch[i] <= 'f'))
+                low = cch[i] - 'a' + 10;//16进制中的a-f，分别对应也是11-16，不区分大小写
+            else
+                ;   // 其他返回0x10
+            highLow = (high << 4) | low;
+            uch[i / 2] = highLow;
+        }      
+        //r = libusb_bulk_transfer(dev_handle, EP1_OUT, &highLow,1, &actualLenth, timeout);
     }
-    r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), &actualLenth, timeout);
+
+    //r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)str.toLatin1().data(), str.length(), &actualLenth, timeout);
+    r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)uch, str.length()/2, &actualLenth, timeout);
+    delete[] uch;
     if (r < 0)
     {        
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
@@ -317,7 +338,7 @@ void QtWidgetsApplication2::writeData() {
     {
         ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
         //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
-    }
+    }    
 }
 
 void QtWidgetsApplication2::writeDataA(unsigned char* data,int lenth,int timeout) {
