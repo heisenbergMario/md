@@ -44,6 +44,8 @@ public:
     void writeData();    
     void readData();
     void writeDataA(unsigned char* data, int lenth, int timeout);
+    void writeQtImg(QImage img);
+    void writeCvImg(Mat m);
     void openImg();
     void qtPrintImg(QImage imgOrigal);
     void qtShowImg(QImage imgOrigal);

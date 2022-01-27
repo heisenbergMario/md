@@ -358,18 +358,16 @@ void XUsbPs_HandleBulkReq1(XUsbPs *InstancePtr, u8 EpNum,
 	usleep(2000);
 	//xil_printf("\r\n [Rece %d byte] numIrqs:%d numRecFrame:%d###%s " ,BufferLen, NumIrqs, NumReceivedFrames, BufferPtr);
 
-	unsigned char* hexCh = (unsigned char*)malloc(BufferLen*2*sizeof(unsigned char));
-	//unsigned char hexCh[1024];
+	xil_printf("bufLen%d",BufferLen);
+
+	int* asciiInt = (int)malloc(BufferLen*sizeof(int));
 	for(int i=0;i<BufferLen;i++)
 	{
-		int ascii=BufferPtr[i];
-		xil_printf("%02X\r\n" , ascii);
-		sprintf(hexCh,"%x",ascii);
-		xil_printf("%s\r\n\r\n" , hexCh);
+		asciiInt[i]=BufferPtr[i];
+		xil_printf("%02X",asciiInt[i]);
 	}
-	xil_printf("%s" , hexCh);
-	free(hexCh);
-
+	free(asciiInt);
+	xil_printf("\r\n\r\n");
 	//xil_printf("%s" , BufferPtr);
 
 	//status = XUsbPs_EpBufferSend(InstancePtr,1,"ddd",3);
