@@ -1,0 +1,20 @@
+print("hello world")
+print(0/10)
+print(1/10)
+print(10/10)
+print("\n\n\n")
+r=0x0F
+g=0x0F
+b=0x0F
+p1=(r&0xF8)|(g>>5)
+p2=((g&0x1C)<<3)|(b>>3)
+p3=((r&0xF8)<<8)|((g&0xFC)<<3)|((b&0xF8)>>3)
+print(hex(r))
+print(hex(g))
+print(hex(b))
+print(hex(r>>3))
+print(hex(g>>2))
+print(hex(b>>3))
+print(hex(p1))
+print(hex(p2))
+print(hex(p3))

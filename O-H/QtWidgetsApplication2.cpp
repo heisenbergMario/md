@@ -365,11 +365,11 @@ void QtWidgetsApplication2::writeDataA(unsigned char* data,int lenth,int timeout
 }
 
 void QtWidgetsApplication2::writeQtImg(QImage img) {
-    ui.lw3->addItem("[writeQtImg]" + ui.pte1->toPlainText());
+    ui.lw3->addItem("[writeQtImg]" + QString::number(img.width()) + "x" + QString::number(img.height()));
     int r = 0;
     int actualLenth = 0;
-    int timeout = 5000;
-    r = libusb_bulk_transfer(dev_handle, EP1_OUT, img.bits(), img.width() * img.height() * 3, &actualLenth, timeout);
+    int timeout = 10000;
+    r = libusb_bulk_transfer(dev_handle, EP1_OUT, img.bits(), img.width() * img.height() * 3, &actualLenth, 0);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
@@ -383,11 +383,11 @@ void QtWidgetsApplication2::writeQtImg(QImage img) {
 }
 
 void QtWidgetsApplication2::writeCvImg(Mat m) {
-    ui.lw3->addItem("[writeCvImg]" + ui.pte1->toPlainText());
+    ui.lw3->addItem("[writeCvImg]" + QString::number(m.rows) + "x" + QString::number(m.cols));
     int r = 0;
     int actualLenth = 0;
-    int timeout = 5000;
-    r = libusb_bulk_transfer(dev_handle, EP1_OUT, m.data, m.rows*m.cols*3, &actualLenth, timeout);
+    int timeout = 10000;
+    r = libusb_bulk_transfer(dev_handle, EP1_OUT, m.data, m.rows*m.cols*3, &actualLenth, 0);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));

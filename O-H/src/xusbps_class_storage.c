@@ -352,13 +352,13 @@ void XUsbPs_HandleBulkReq1(XUsbPs *InstancePtr, u8 EpNum,
 				u8 *BufferPtr, u32 BufferLen, int NumIrqs, int NumReceivedFrames)
 {
 	int status;
-	usleep(2000);
-	usleep(2000);
-	usleep(2000);
-	usleep(2000);
+//	usleep(2000);
+//	usleep(2000);
+//	usleep(2000);
+//	usleep(2000);
 	//xil_printf("\r\n [Rece %d byte] numIrqs:%d numRecFrame:%d###%s " ,BufferLen, NumIrqs, NumReceivedFrames, BufferPtr);
 
-	xil_printf("bufLen%d",BufferLen);
+	xil_printf("bufLen%d\r\n",BufferLen);
 
 	int* asciiInt = (int)malloc(BufferLen*sizeof(int));
 	for(int i=0;i<BufferLen;i++)
