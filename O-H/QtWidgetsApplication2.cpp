@@ -2,6 +2,7 @@
 [USB]https://blog.csdn.net/wangguchao/article/details/103886606
 [USB]https://blog.csdn.net/duan_xiaosu/article/details/68930643
 [numpy]https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&mid=2247515127&idx=4&sn=c7322ef021fe1af216d3e20c6086d46f&scene=0#wechat_redirect
+[DMA]https://www.cnblogs.com/Hx1024/p/14437476.html
 **/
 #include "QtWidgetsApplication2.h"
 
