@@ -36,7 +36,7 @@ void QtWidgetsApplication2::lot() {
     //ui.lw3->scrollToBottom();
     //btnC1();
     int r = 0;
-    r = libusb_bulk_transfer(dev_handle, EP1_IN, dataReceive, 1, &actualLenth, 100);
+    r = libusb_bulk_transfer(dev_handle, EP2_IN, dataReceive, 6, &actualLenth, 100);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
@@ -154,15 +154,15 @@ void QtWidgetsApplication2::openImg()
     
 
     /*OpenCV*/
-    Mat m = imread(fileName.toStdString()); 
-    cout << strlen((char*)m.data) << endl;
-    cout << m.data << endl;
-    //cout << m << endl;
-    //cvPrintImg(m);
-    cvShowImg(m);      
+    mSource = imread(fileName.toStdString()); 
+    cout << strlen((char*)mSource.data) << endl;
+    cout << mSource.data << endl;
+    //cout << mSource << endl;
+    //cvPrintImg(mSource);
+    cvShowImg(mSource);
 
     //writeQtImg(img);
-    writeCvImg(m);
+    //writeCvImg(mSource);
 }
 
 void QtWidgetsApplication2::qtPrintImg(QImage img)
@@ -295,7 +295,7 @@ void QtWidgetsApplication2::btnA1() {
     ui.lw3->scrollToBottom();
 }
 
-void QtWidgetsApplication2::writeData() {
+void QtWidgetsApplication2::writeData(int epNum) {
     ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
     int r = 0;
     int actualLenth = 0;
@@ -334,7 +334,7 @@ void QtWidgetsApplication2::writeData() {
         //r = libusb_bulk_transfer(dev_handle, EP1_OUT, &highLow,1, &actualLenth, timeout);
     }
     //r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)str.toLatin1().data(), str.length(), &actualLenth, timeout);
-    r = libusb_bulk_transfer(dev_handle, EP1_OUT, (unsigned char*)uch, str.length()/2, &actualLenth, timeout);
+    r = libusb_bulk_transfer(dev_handle, epNum, (unsigned char*)uch, str.length()/2, &actualLenth, timeout);
     delete[] uch;
     if (r < 0)
     {        
@@ -403,11 +403,11 @@ void QtWidgetsApplication2::writeCvImg(Mat m) {
 
 void QtWidgetsApplication2::btnB1() {
     ui.lw3->addItem("\r\n btnB1: ep1 write");    
-    writeData();
+    writeData(EP1_OUT);
     ui.lw3->scrollToBottom();
 }
 
-void QtWidgetsApplication2::readData() {
+void QtWidgetsApplication2::readData(int epNum) {
     int r = 0;    
     int lenth = 0, actualLenth;
     if (!ui.pte2->toPlainText().isEmpty())
@@ -415,7 +415,7 @@ void QtWidgetsApplication2::readData() {
         lenth = ui.pte2->toPlainText().toInt();
     }
     int timeout = 100;
-    r = libusb_bulk_transfer(dev_handle, EP1_IN, dataReceive, lenth, &actualLenth, 100);
+    r = libusb_bulk_transfer(dev_handle, epNum, dataReceive, lenth, &actualLenth, 100);
     if (r < 0)
     {
         ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
@@ -430,74 +430,47 @@ void QtWidgetsApplication2::readData() {
 
 void QtWidgetsApplication2::btnC1() {
     ui.lw3->addItem("\r\n btnC1: ep1 read");    
-    readData();
+    readData(EP1_IN);
     ui.lw3->scrollToBottom();
 }
 
 void QtWidgetsApplication2::btnD1() {
     ui.lw3->addItem("\r\n btnD1: ep2 write");
-    ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
-    int r = 0;
-    r = libusb_bulk_transfer(dev_handle, EP2_OUT, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), &actualLenth, 1000);
-    if (r < 0)
-    {
-        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
-        ui.lw3->scrollToBottom();
-        return;
-    }
-    else
-    {
-        ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
-        //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
-        ui.lw3->scrollToBottom();
-    }
+    writeData(EP2_OUT);
+    ui.lw3->scrollToBottom();
 }
 
 void QtWidgetsApplication2::btnE1() {
     ui.lw3->addItem("\r\n btnE1: ep2 read");    
-    int r = 0;
-    int lenth = 0, actualLenth;
-    if (!ui.pte2->toPlainText().isEmpty())
-    {
-        lenth = ui.pte2->toPlainText().toInt();
-    }
-    r = libusb_bulk_transfer(dev_handle, EP2_IN, dataReceive, lenth, &actualLenth, 100);
-    if (r < 0)
-    {
-        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
-        ui.lw3->scrollToBottom();
-        return;
-    }
-    else
-    {
-        ui.lw3->addItem("[read]" + QString::number(actualLenth) + "byte");
-        ui.lw3->addItem("[read]" + QString(QLatin1String((char*)dataReceive)));
-        ui.lw3->scrollToBottom();
-    }
+    readData(EP2_IN);
+    ui.lw3->scrollToBottom();
 }
 
 void QtWidgetsApplication2::btnF1() {
     ui.lw3->addItem("\r\n btnF1: ep3 write");   
-    ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
-    int r = 0;
-    r = libusb_bulk_transfer(dev_handle, EP3_OUT, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), &actualLenth, 2000);
-    if (r < 0)
-    {
-        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
-        ui.lw3->scrollToBottom();
-        return;
-    }
-    else
-    {
-        ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
-        //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
-        ui.lw3->scrollToBottom();
-    }    
+    writeData(EP3_OUT);
+    //ui.lw3->addItem("[write]" + ui.pte1->toPlainText());
+    //int r = 0;
+    //r = libusb_bulk_transfer(dev_handle, EP3_OUT, (unsigned char*)ui.pte1->toPlainText().toLatin1().data(), ui.pte1->toPlainText().length(), &actualLenth, 2000);
+    //if (r < 0)
+    //{
+    //    ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+    //    ui.lw3->scrollToBottom();
+    //    return;
+    //}
+    //else
+    //{
+    //    ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
+    //    //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
+    //    ui.lw3->scrollToBottom();
+    //}    
+    ui.lw3->scrollToBottom();
 }
 
 void QtWidgetsApplication2::btnG1() {
     ui.lw3->addItem("\r\n btnG1: ep3 read");
-    int r = 0;
+    readData(EP3_IN);
+    /*int r = 0;
     int lenth = 0, actualLenth;
     if (!ui.pte2->toPlainText().isEmpty())
     {
@@ -515,7 +488,8 @@ void QtWidgetsApplication2::btnG1() {
         ui.lw3->addItem("[read]" + QString::number(actualLenth) + "byte");
         ui.lw3->addItem("[read]" + QString(QLatin1String((char*)dataReceive)));
         ui.lw3->scrollToBottom();
-    }
+    }*/
+    ui.lw3->scrollToBottom();
 }
 
 void QtWidgetsApplication2::btnH1() {
@@ -526,34 +500,58 @@ void QtWidgetsApplication2::btnH1() {
 
 void QtWidgetsApplication2::btnI1() {
     ui.lw3->addItem("\r\n btnI1");
+    int r = 0;
+    int actualLenth = 0;
+    int timeout = 10000;
+    r = libusb_bulk_transfer(dev_handle, EP1_OUT, mSource.data, mSource.rows * mSource.cols * 3, &actualLenth, 0);
+    if (r < 0)
+    {
+        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+        return;
+    }
+    else
+    {
+        ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
+        //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
+    }
     ui.lw3->scrollToBottom();
 }
 
 void QtWidgetsApplication2::btnJ1() {
-    ui.lw3->addItem("\r\n btnJ1 reset");
+    ui.lw3->addItem("\r\n btnJ1");
     int r = 0;
-    if (openFlag)
+    int actualLenth = 0;
+    int timeout = 10000;
+    r = libusb_bulk_transfer(dev_handle, EP2_OUT, mSource.data, mSource.rows * mSource.cols * 3, &actualLenth, 0);
+    if (r < 0)
     {
-        r = libusb_reset_device(dev_handle);
-        if (r < 0)
-        {
-            ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
-            ui.lw3->scrollToBottom();
-            return;
-        }
-        else
-        {
-            ui.lw3->addItem("[reset]");
-            //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
-            ui.lw3->scrollToBottom();
-        }
+        ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+        return;
     }
-    
+    else
+    {
+        ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
+        //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
+    }    
     ui.lw3->scrollToBottom();
 }
 
 void QtWidgetsApplication2::btnK1() {
     ui.lw3->addItem("\r\n btnK1: th start");
+    //int r = 0;
+    //int actualLenth = 0;
+    //int timeout = 10000;
+    //r = libusb_bulk_transfer(dev_handle, EP3_OUT, mSource.data, mSource.rows * mSource.cols * 3, &actualLenth, 0);
+    //if (r < 0)
+    //{
+    //    ui.lw3->addItem("[ERR]" + (QString)libusb_error_name(r));
+    //    return;
+    //}
+    //else
+    //{
+    //    ui.lw3->addItem("[write]" + QString::number(actualLenth) + "byte");
+    //    //ui.lw3->addItem("[read]" + QString(QLatin1String((char*)data)));
+    //}
     th1->stop = false;
     th1->start();
     ui.btnK1->setEnabled(false);
