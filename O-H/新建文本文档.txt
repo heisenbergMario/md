@@ -1,0 +1,15 @@
+2022.2.11
+https://blog.csdn.net/WP_FD/article/details/89600759?spm=1001.2101.3001.6650.3&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-3.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-3.pc_relevant_default&utm_relevant_index=6
+
+黄尧禹舜夏商周 春秋战国乱悠悠
+秦汉三国晋统一 南朝北朝是对头
+隋唐五代又十国 宋元明清帝王休
+
+方向
+1. pc-ps通信
+2. pl直接发送（spi-3,spi-4,qspi,mpu）
+3. ps时钟控制
+4. ps-pl通信
+    a. 寄存器
+    b. ddr/dma
+5. pl-ps中断
