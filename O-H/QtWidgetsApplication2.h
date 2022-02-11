@@ -41,8 +41,8 @@ class QtWidgetsApplication2 : public QMainWindow
 public:
     QtWidgetsApplication2(QWidget *parent = Q_NULLPTR);
     void openUSB();
-    void writeData();    
-    void readData();
+    void writeData(int epNum);
+    void readData(int epNum);
     void writeDataA(unsigned char* data, int lenth, int timeout);
     void writeQtImg(QImage img);
     void writeCvImg(Mat m);
@@ -58,6 +58,7 @@ public:
 
 private:
     Ui::QtWidgetsApplication2Class ui;
+    Mat mSource;
     bool openFlag;
     myThread* th1;
     unsigned char dataReceive[1024];
