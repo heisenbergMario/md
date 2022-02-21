@@ -13,3 +13,15 @@ https://blog.csdn.net/WP_FD/article/details/89600759?spm=1001.2101.3001.6650.3&u
     a. 寄存器
     b. ddr/dma
 5. pl-ps中断
+
+2022.2.19
+2. spi-3
+    a. write-en , 1-byte-9-bit write
+    b. return 1-byte-done/last-byte-done
+    c. done->write stop, data change->write-en
+
+激励代码
+	1. 信号声明（reg，wire）
+	2. 时钟生成
+	3. 复位，先0，delay，再1
+	4. 激励
