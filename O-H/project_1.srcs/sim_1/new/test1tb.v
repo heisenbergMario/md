@@ -36,6 +36,8 @@ module test1tb(
     wire O_lastByte_done;
     
     reg [7:0] dataNum;
+    reg [7:0] randomData;
+    
     always #50 I_clk=~I_clk;
     
     initial 
@@ -85,23 +87,35 @@ module test1tb(
                     if(dataNum>1)
                         begin
                             dataNum=dataNum-1;
-                            //I_wr_en=0;
-                            I_1st_byte=0;                            
-                            I_2nd_byte=1;
-                            I_data_in_8={$random} % 60;
+                            I_wr_en<=1;
+                            I_1st_byte<=0;                            
+                            I_2nd_byte<=1;
+                            I_data_in_8<={$random} % 60;
                         end
                     else
                         begin
-                            dataNum=dataNum-1;
-                            //I_wr_en=0;
-                            I_2nd_byte=0;                            
-                            I_last_byte=1;
-                            I_data_in_8={$random} % 60;
+                            dataNum<=dataNum-1;
+                            I_wr_en<=1;
+                            I_2nd_byte<=0;                            
+                            I_last_byte<=1;
+                            I_data_in_8<={$random} % 60;
                         end
                 end
             if(O_lastByte_done==1)
                 begin
-                    I_wr_en=0;
+                    I_wr_en<=0;
+                    I_1st_byte<=0;                            
+                    I_2nd_byte<=0;
+                    I_last_byte<=0;
+                    if(({$random}%10)<3)
+                        begin
+                            dataNum<=5;
+                            I_1st_byte<=1;                            
+                            I_2nd_byte<=0;
+                            I_last_byte<=0;
+                            I_data_in_8<={$random} % 60;
+                            I_wr_en<=1;
+                        end                    
                 end
         end
         

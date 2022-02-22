@@ -28,34 +28,28 @@ input I_wr_en,
 input I_1st_byte,
 input I_2nd_byte,
 input I_last_byte,
-output  O_clk,
 output reg O_cs,
+output  O_clk,
 output reg O_sdio,
 output reg O_1Byte_done,
 output reg O_lastByte_done
     );
     
     reg [3:0] rDataCnt;    
-    reg [3:0] rState;
     reg rClkEn;
-    
-    parameter IDLE=0;
-    parameter WRITE=1;
-    parameter WRITEHOLD=2;
-    
-    
+        
     assign O_clk=rClkEn?I_clk:0;
     
     always@(negedge I_rst or negedge I_clk)
     begin
         if(!I_rst)
-            begin
-                O_1Byte_done=0;
-                O_lastByte_done=0;
+            begin                
                 O_cs<=1'b1;
                 rClkEn=1'b0;
                 O_sdio<=1'b0;
                 rDataCnt<=9;
+                O_1Byte_done=0;
+                O_lastByte_done=0;
             end
         else
             begin
@@ -68,22 +62,28 @@ output reg O_lastByte_done
                                 if(rDataCnt==9)
                                     begin
                                         O_cs<=1'b0;   
-                                        rClkEn<=1;
-                                        O_1Byte_done=1'b0;                                                                      
+                                        rClkEn<=1;                                                                                                     
                                         O_sdio=1'b0;
                                         rDataCnt<=rDataCnt-1;
+                                        O_1Byte_done=0;        
+                                        O_lastByte_done=0; 
                                     end 
                                 else if(rDataCnt>1&&!O_1Byte_done)                                 
                                     begin
                                         O_cs<=1'b0;  
+                                        rClkEn<=1;   
                                         O_sdio<=I_data_in_8[rDataCnt-1];
                                         rDataCnt<=rDataCnt-1;
+                                        O_1Byte_done=0;        
+                                        O_lastByte_done=0; 
                                     end
                                 else
                                     begin
                                         O_cs<=1'b0;
-                                        O_sdio<=I_data_in_8[rDataCnt-1];      
-                                        O_1Byte_done=1;                                        
+                                        rClkEn<=1;   
+                                        O_sdio<=I_data_in_8[rDataCnt-1]; 
+                                        O_1Byte_done=1;        
+                                        O_lastByte_done=0;                                      
                                         rDataCnt<=9;
                                     end
                             end
@@ -92,23 +92,29 @@ output reg O_lastByte_done
                                 if(rDataCnt==9)
                                     begin       
                                         O_cs<=1'b0;   
-                                        rClkEn<=1; 
-                                        O_1Byte_done=1'b0;                          
+                                        rClkEn<=1;                                                                 
                                         O_sdio=1'b1;
                                         rDataCnt<=rDataCnt-1;
+                                        O_1Byte_done=0;  
+                                        O_lastByte_done=0;   
                                     end 
                                 else if(rDataCnt>1&&!O_1Byte_done)                                 
                                     begin
                                         O_cs<=1'b0;   
+                                        rClkEn<=1;   
                                         O_sdio<=I_data_in_8[rDataCnt-1];
                                         rDataCnt<=rDataCnt-1;
+                                        O_1Byte_done=0;  
+                                        O_lastByte_done=0;   
                                     end
                                 else
                                     begin
                                         O_cs<=1'b0;   
+                                        rClkEn<=1;   
                                         O_sdio<=I_data_in_8[rDataCnt-1];
-                                        O_1Byte_done=1;
                                         rDataCnt<=9;
+                                        O_1Byte_done=1;  
+                                        O_lastByte_done=0;   
                                     end
                             end
                         else if(I_last_byte)
@@ -116,30 +122,36 @@ output reg O_lastByte_done
                                 if(rDataCnt==9)
                                     begin
                                         O_cs<=1'b0;   
-                                        rClkEn<=1;
-                                        O_1Byte_done=1'b0;
-                                        O_lastByte_done=1'b0;                              
+                                        rClkEn<=1;                                                                  
                                         O_sdio=1'b1;
                                         rDataCnt<=rDataCnt-1;
+                                        O_1Byte_done=0;
+                                        O_lastByte_done=0;    
                                     end 
                                 else if(rDataCnt>1&&!O_1Byte_done)                                 
                                     begin         
-                                        O_cs<=1'b0;                               
+                                        O_cs<=1'b0;        
+                                        rClkEn<=1;                          
                                         O_sdio<=I_data_in_8[rDataCnt-1];
                                         rDataCnt<=rDataCnt-1;
+                                        O_1Byte_done=0;
+                                        O_lastByte_done=0; 
                                     end
                                 else
                                     begin
                                         O_cs<=1'b0;   
+                                        rClkEn<=1;   
                                         O_sdio<=I_data_in_8[rDataCnt-1];
-                                        O_1Byte_done=1;
-                                        O_lastByte_done=1;
                                         rDataCnt<=9;
+                                        O_1Byte_done=1;
+                                        O_lastByte_done=1; 
                                     end
                             end                
                         else
                             begin
+                                O_cs<=1'b0;
                                 rClkEn<=0;
+                                O_sdio<=1'b0;
                             end
                     end
                 else
@@ -147,6 +159,8 @@ output reg O_lastByte_done
                         O_cs<=1'b1;
                         rClkEn<=0;
                         O_sdio<=1'b0;
+                        //O_1Byte_done=0;
+                        //O_lastByte_done=0;
                     end
             end
     end
