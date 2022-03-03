@@ -24,7 +24,8 @@ module test1(
 input I_clk,
 input I_rst,
 input [7:0]  I_data_in_8,
-input I_wr_en,
+input I_inst_img,
+input I_wr_en_tmp,
 input I_1st_byte,
 input I_2nd_byte,
 input I_last_byte,
@@ -35,10 +36,16 @@ output reg O_1Byte_done,
 output reg O_lastByte_done
     );
     
-    reg [3:0] rDataCnt;    
+    reg [3:0] rDataCnt; 
     reg rClkEn;
         
+    wire I_wr_en;
+    wire I_wr_dis;
+    
+    
     assign O_clk=rClkEn?I_clk:0;
+    assign I_wr_en=(!I_inst_img && I_wr_en_tmp) ? 1:0;
+    assign I_wr_dis=(!I_inst_img && !I_wr_en_tmp) ? 1:0;
     
     always@(negedge I_rst or negedge I_clk)
     begin
@@ -154,7 +161,7 @@ output reg O_lastByte_done
                                 O_sdio<=1'b0;
                             end
                     end
-                else
+                else if(I_wr_dis)
                     begin                        
                         O_cs<=1'b1;
                         rClkEn<=0;
