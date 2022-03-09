@@ -133,7 +133,44 @@ module test1tb(
 //                end
 //        end
         
-        
+   always@(posedge I_clk) 
+    begin
+        if(O_1Data_done==1)
+            begin
+                if(dataNum>1)
+                    begin
+                        dataNum=dataNum-1;
+                        I_wr_en_tmp<=1;
+                        I_1st_byte<=0;                            
+                        I_2nd_byte<=1;
+                        I_data_in_8<={$random} % 60;
+                    end
+                else
+                    begin
+                        dataNum<=dataNum-1;
+                        I_wr_en_tmp<=1;
+                        I_2nd_byte<=0;                            
+                        I_last_byte<=1;
+                        I_data_in_8<={$random} % 60;
+                    end
+            end
+        if(O_lastData_done==1)
+            begin
+                I_wr_en_tmp<=0;
+                I_1st_byte<=0;                            
+                I_2nd_byte<=0;
+                I_last_byte<=0;
+                if(({$random}%10)<3)
+                    begin
+                        dataNum<=5;
+                        I_1st_byte<=1;                            
+                        I_2nd_byte<=0;
+                        I_last_byte<=0;
+                        I_data_in_8<={$random} % 60;
+                        I_wr_en_tmp<=1;
+                    end                    
+            end
+    end 
     
 //    always @(posedge I_clk) 
 //    begin
