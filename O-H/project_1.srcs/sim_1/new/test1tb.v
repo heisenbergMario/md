@@ -81,12 +81,12 @@ module test1tb(
         I_1st_data=0;
         I_2nd_data=0;
         I_last_data=0;
-        I_3c_en=0;
-        I_8bit_dc=0;
+        I_3c_en=1;
+        I_8bit_dc=1;
         I_cs_toggle=0;
         #100         
         I_last_byte=1;
-        I_1st_data=1;
+        I_2nd_data=1;
         
         I_inst_img=1;
         I_wr_en_tmp=1;       

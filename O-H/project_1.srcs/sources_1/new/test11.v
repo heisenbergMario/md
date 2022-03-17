@@ -75,7 +75,7 @@ module test11(
                     )
                     );  
     assign cmdRgbCnt=(I_1st_data) ? (1+8+rgbCnt):(I_3c_en?(1+8+rgbCnt):rgbCnt);//
-    assign cmdRgbData=(I_1st_data) ? {CMD2C,rgbData}:(I_3c_en?{CMD3C,rgbData}:rgbData);//
+    assign cmdRgbData=(I_1st_data) ? ({CMD2C,rgbData<<(27-rgbCnt)}>>(27-rgbCnt)):(I_3c_en?({CMD3C,rgbData<<(27-rgbCnt)}>>(27-rgbCnt)):(rgbData<<(27-rgbCnt)>>(27-rgbCnt)));//
     assign lastDataDone=(I_last_data) ? 1'b1:1'b0;
     assign I_wr_en=(I_inst_img && I_wr_en_tmp) ? 1:0;
     assign I_wr_dis=(I_inst_img && !I_wr_en_tmp) ? 1:0;
@@ -101,7 +101,7 @@ module test11(
                 O_cs<=1;
                 rClkEn<=0;
                 O_sdio<=0;
-                rCmdRgbCnt<=cmdRgbCnt;
+                rCmdRgbCnt<=1;
                 O_1Data_done<=0;
                 O_lastData_done<=0;
             end
@@ -111,12 +111,12 @@ module test11(
                     begin
                         if(I_1st_data || I_2nd_data || I_last_data)
                             begin
-                                if(rCmdRgbCnt>1 && !O_1Data_done)
+                                if(rCmdRgbCnt<cmdRgbCnt && !O_1Data_done)
                                     begin
                                         O_cs<=0;
                                         rClkEn<=1;
-                                        O_sdio<=cmdRgbData[rCmdRgbCnt-1];
-                                        rCmdRgbCnt<=rCmdRgbCnt-1;
+                                        O_sdio<=cmdRgbData[cmdRgbCnt-rCmdRgbCnt];
+                                        rCmdRgbCnt<=rCmdRgbCnt+1;
                                         O_1Data_done<=0;
                                         O_lastData_done<=0;
                                     end
@@ -124,8 +124,8 @@ module test11(
                                     begin
                                         O_cs<=0;
                                         rClkEn<=1;
-                                        O_sdio<=cmdRgbData[rCmdRgbCnt-1];
-                                        rCmdRgbCnt<=cmdRgbCnt;
+                                        O_sdio<=cmdRgbData[cmdRgbCnt-rCmdRgbCnt];
+                                        rCmdRgbCnt<=1;
                                         O_1Data_done<=1;
                                         O_lastData_done<=lastDataDone;
                                     end
@@ -143,7 +143,7 @@ module test11(
                                 O_cs<=0;
                                 rClkEn<=0;
                                 O_sdio<=0;
-                                rCmdRgbCnt<=cmdRgbCnt;                                
+                                rCmdRgbCnt<=1;                                
                             end
                     end
                 else if(I_wr_dis)
@@ -151,7 +151,7 @@ module test11(
                         O_cs<=1;
                         rClkEn<=0;
                         O_sdio<=0;
-                        rCmdRgbCnt<=cmdRgbCnt;
+                        rCmdRgbCnt<=1;
                         //O_1Data_done<=0;
                         //O_lastData_done<=0;
                     end
