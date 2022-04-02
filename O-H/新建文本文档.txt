@@ -25,3 +25,5 @@ https://blog.csdn.net/WP_FD/article/details/89600759?spm=1001.2101.3001.6650.3&u
 	2. 时钟生成
 	3. 复位，先0，delay，再1
 	4. 激励
+
+https://blog.csdn.net/weisili2000_2000/article/details/84850090?spm=1001.2101.3001.6650.15&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-15.queryctrv4&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-15.queryctrv4&utm_relevant_index=22
