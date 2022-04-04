@@ -28,6 +28,7 @@ def funConvert(event):
                 byteCount=len(bytes)-1
                 if(byteCount==0):
                     text_Reg_target.insert('insert',bytes[0])
+                    text_Reg_target.insert('insert',"\n")
                 else:
                     nextByte=splitUnit
                     while((nextByte-splitUnit)<byteCount):
@@ -45,7 +46,7 @@ def funConvert(event):
                     
             else:
                 text_Reg_target.insert('insert',lines[i])
-            text_Reg_target.insert('insert',"\n")
+                text_Reg_target.insert('insert',"\n")
         
         
 ###Regs convert
